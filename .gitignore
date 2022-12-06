@@ -3,3 +3,8 @@
 /projects/qt_easy_demo/qt_easy_demo/Debug
 /projects/qt_easy_demo/qt_easy_demo/Release
 /projects/qt_easy_demo/qt_easy_demo/.vs
+/projects/qt_image_hash/qt_image_hash/*.sln
+/projects/qt_image_hash/qt_image_hash/*.user
+/projects/qt_image_hash/qt_image_hash/Release
+/projects/qt_image_hash/qt_image_hash/Debug
+/projects/qt_image_hash/qt_image_hash/.vs
