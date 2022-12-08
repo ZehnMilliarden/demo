@@ -15,10 +15,16 @@ QLeftWidget::~QLeftWidget()
 
 }
 
-bool QLeftWidget::AddButton(const QString& txt)
+bool QLeftWidget::AddButton(const QString& txt, const int nButtonId)
 {
+    if (!m_pButtonGroup)
+    {
+        return false;
+    }
+
     QPushButton* pPushButton = new QPushButton();
     pPushButton->setText(txt);
+    m_pButtonGroup->addButton(pPushButton, nButtonId);
     layout()->addWidget(pPushButton);
     return true;
 }
@@ -37,4 +43,9 @@ void QLeftWidget::AddLayout()
     pVSubLeftBoxLayout->setSpacing(10);
     pVSubLeftBoxLayout->setAlignment(Qt::AlignTop);
     setLayout(pVSubLeftBoxLayout);
+
+    m_pButtonGroup = new QButtonGroup;
+    m_pButtonGroup->setExclusive(true);
+
+    connect(m_pButtonGroup, &QButtonGroup::idClicked, this, &QLeftWidget::idClicked);
 }

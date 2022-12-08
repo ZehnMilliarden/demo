@@ -24,6 +24,9 @@
     <Filter Include="Widgets">
       <UniqueIdentifier>{b2cdc9e8-0ed0-4f74-8d7c-25be457bad63}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\qss">
+      <UniqueIdentifier>{559b26dd-2b7a-46f2-84f3-f75316202f77}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -49,5 +52,15 @@
     <QtMoc Include="widgets\QRightWidget.h">
       <Filter>Widgets</Filter>
     </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="qt_image_hash.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\style_sheet.css">
+      <Filter>Resource Files\qss</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -1,0 +1,7 @@
+QWidget:focus {
+    outline: none; /* 去掉得到焦点时的虚线框 */
+}
+
+QLabel#tips_algorithm_name {
+    color: #ff0000;
+}

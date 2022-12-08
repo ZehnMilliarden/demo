@@ -99,6 +99,12 @@
   <ItemGroup>
     <QtMoc Include="widgets\QRightWidget.h" />
   </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="qt_image_hash.qrc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\style_sheet.css" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
     <Import Project="$(QtMsBuild)\qt.targets" />

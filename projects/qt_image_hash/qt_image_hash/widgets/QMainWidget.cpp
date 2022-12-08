@@ -7,9 +7,6 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 
-#include "QLeftWidget.h"
-#include "QRightWidget.h"
-
 QMainWidget::QMainWidget(QWidget* parent /*= nullptr*/)
     : QWidget(parent)
 {
@@ -51,30 +48,49 @@ void QMainWidget::AddLayout()
 
     AddLeftLayout(static_cast<QLayout*>(pHBoxLayout));
     AddRightLayout(static_cast<QLayout*>(pHBoxLayout));
+    connect(m_pLeftWidget, &QLeftWidget::idClicked, m_pRightWidget, &QRightWidget::btnClicked);
+
+    QFunctionList qFunctionList;
+    m_pRightWidget->GetWidgetsId(qFunctionList);
+
+    for (auto it : qFunctionList)
+    {
+        m_pLeftWidget->AddButton(it.first, it.second);
+    }
 }
 
-void QMainWidget::AddLeftLayout(QLayout* pLayout)
+QWidget* QMainWidget::AddLeftLayout(QLayout* pLayout)
 {
     if (!pLayout)
     {
-        return;
+        return nullptr;
     }
 
-    QLeftWidget* pLeftWidget = new QLeftWidget;
-    pLayout->addWidget(pLeftWidget);
+    if (m_pLeftWidget)
+    {
+        return static_cast<QWidget*>(m_pLeftWidget);
+    }
 
-    pLeftWidget->AddButton(QString::fromLocal8Bit("均值Hash"));
-    pLeftWidget->AddButton(QString::fromLocal8Bit("差异Hash"));
-    pLeftWidget->AddButton(QString::fromLocal8Bit("感知Hash"));
+    m_pLeftWidget = new QLeftWidget;
+    layout()->addWidget(m_pLeftWidget);
+
+    return static_cast<QWidget*>(m_pLeftWidget);
 }
 
-void QMainWidget::AddRightLayout(QLayout* pLayout)
+QWidget* QMainWidget::AddRightLayout(QLayout* pLayout)
 {
     if (!pLayout)
     {
-        return;
+        return nullptr;
     }
 
-    QRightWidget* pRightWidget = new QRightWidget;
-    pLayout->addWidget(pRightWidget);
+    if (!m_pRightWidget)
+    {
+        static_cast<QWidget*>(m_pRightWidget);
+    }
+
+    m_pRightWidget = new QRightWidget;
+    layout()->addWidget(m_pRightWidget);
+
+    return static_cast<QWidget*>(m_pRightWidget);
 }
