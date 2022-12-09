@@ -27,6 +27,9 @@
     <Filter Include="Resource Files\qss">
       <UniqueIdentifier>{559b26dd-2b7a-46f2-84f3-f75316202f77}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Objects">
+      <UniqueIdentifier>{c178831a-7fc6-46ee-8569-029f629bed94}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -41,6 +44,9 @@
     <ClCompile Include="widgets\QRightWidget.cpp">
       <Filter>Widgets</Filter>
     </ClCompile>
+    <ClCompile Include="objects\QHashCalcute.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="widgets\QMainWidget.h">
@@ -51,6 +57,9 @@
     </QtMoc>
     <QtMoc Include="widgets\QRightWidget.h">
       <Filter>Widgets</Filter>
+    </QtMoc>
+    <QtMoc Include="objects\QHashCalcute.h">
+      <Filter>Objects</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>

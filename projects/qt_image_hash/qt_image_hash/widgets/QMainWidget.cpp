@@ -22,7 +22,7 @@ void QMainWidget::InitUi()
 {
     setObjectName("QMainWidget");
     setWindowTitle("ImageHash");
-    setFixedSize(QSize(500,350));
+    setFixedSize(QSize(500,380));
 
     MoveToDesktopCenter();
     AddLayout();
