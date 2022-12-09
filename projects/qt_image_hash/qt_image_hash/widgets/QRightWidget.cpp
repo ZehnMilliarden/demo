@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QPixmap>
 #include <QFileDialog>
+#include <QProcessEnvironment>
 
 #define ADD_NEW_FUCTION(txt) \
     m_vctStackedWidget.push_back(std::pair<QString, int>(QString::fromLocal8Bit(txt), m_vctStackedWidget.size()));
@@ -46,10 +47,16 @@ void QRightWidget::btnRunClicked(bool checked)
     case QHashCalcute::None:
 
     {
+        QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+        QString fileDir = env.value("USERPROFILE", "./");
+        if (0 != fileDir.compare("./"))
+        {
+            fileDir.append("/Pictures");
+        }
         QString fileName = QFileDialog::getOpenFileName(
             this,
             tr("open a file."),
-            "C:/Users/CF/Pictures/Saved Pictures",
+            fileDir,
             tr("images(*.png *.jpg *.bmp)"));
 
         if (!fileName.isEmpty())
