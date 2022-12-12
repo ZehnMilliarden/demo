@@ -21,10 +21,45 @@
       <UniqueIdentifier>{639EADAA-A684-42e4-A9AD-28FC9BCB8F7C}</UniqueIdentifier>
       <Extensions>ts</Extensions>
     </Filter>
+    <Filter Include="widgets">
+      <UniqueIdentifier>{3a56495d-e142-48c8-8c7b-02e7ff4b4f97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="widgets\sub_widgets">
+      <UniqueIdentifier>{bd2e270e-2c4a-440f-b4a7-87b78dd78c59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="widgets\main_widgets">
+      <UniqueIdentifier>{c6c72da3-bde3-4555-b1f1-a78c3d44569d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="widgets\main_widgets\QMainWidget.cpp">
+      <Filter>widgets\main_widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\main_widgets\QMainLeftWidget.cpp">
+      <Filter>widgets\main_widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\main_widgets\QMainRightWidget.cpp">
+      <Filter>widgets\main_widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\sub_widgets\QTreeWidgetLab.cpp">
+      <Filter>widgets\sub_widgets</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="widgets\main_widgets\QMainWidget.h">
+      <Filter>widgets\main_widgets</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\main_widgets\QMainLeftWidget.h">
+      <Filter>widgets\main_widgets</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\main_widgets\QMainRightWidget.h">
+      <Filter>widgets\main_widgets</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\sub_widgets\QTreeWidgetLab.h">
+      <Filter>widgets\sub_widgets</Filter>
+    </QtMoc>
   </ItemGroup>
 </Project>

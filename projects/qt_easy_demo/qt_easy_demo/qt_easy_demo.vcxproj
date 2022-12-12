@@ -58,6 +58,16 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|Win32'">
   </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>./;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>./;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|Win32'" Label="Configuration">
     <ClCompile>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
@@ -86,6 +96,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="widgets\main_widgets\QMainLeftWidget.cpp" />
+    <ClCompile Include="widgets\main_widgets\QMainRightWidget.cpp" />
+    <ClCompile Include="widgets\main_widgets\QMainWidget.cpp" />
+    <ClCompile Include="widgets\sub_widgets\QTreeWidgetLab.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="widgets\main_widgets\QMainWidget.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="widgets\main_widgets\QMainLeftWidget.h" />
+    <QtMoc Include="widgets\main_widgets\QMainRightWidget.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="widgets\sub_widgets\QTreeWidgetLab.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
