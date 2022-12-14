@@ -12,7 +12,7 @@ void QMainWidget::OnTitleChange(const QString& title)
 QMainWidget::QMainWidget(QWidget* parent /*= nullptr*/)
     :QWidget(parent)
 {
-    setObjectName("qt_easy_demo_QMainWidget");
+    setObjectName("QMainWidget");
     setWindowTitle("qt_easy_demo");
     setFixedSize(QSize(700, 580));
     InitUI();

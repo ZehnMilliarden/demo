@@ -30,6 +30,15 @@
     <Filter Include="widgets\main_widgets">
       <UniqueIdentifier>{c6c72da3-bde3-4555-b1f1-a78c3d44569d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\res">
+      <UniqueIdentifier>{c86cf2b4-2676-41ec-9f42-610b232fdbf8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="public">
+      <UniqueIdentifier>{3bfbd644-5ea0-4ba6-bae6-984ef7451c85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="public\qt_demo">
+      <UniqueIdentifier>{9a398cfa-077c-47dd-bf52-82777b9eb456}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -47,6 +56,12 @@
     <ClCompile Include="widgets\sub_widgets\QTreeWidgetLab.cpp">
       <Filter>widgets\sub_widgets</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\public\qt_demo\StyleSheet.cpp">
+      <Filter>public\qt_demo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\public\qt_demo\StyleWidget.cpp">
+      <Filter>public\qt_demo</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="widgets\main_widgets\QMainWidget.h">
@@ -61,5 +76,23 @@
     <QtMoc Include="widgets\sub_widgets\QTreeWidgetLab.h">
       <Filter>widgets\sub_widgets</Filter>
     </QtMoc>
+    <QtMoc Include="..\..\..\public\qt_demo\StyleWidget.h">
+      <Filter>public\qt_demo</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="qt_easy_demo.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\style_sheet.css">
+      <Filter>Resource Files\res</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\public\qt_demo\StyleSheet.h">
+      <Filter>public\qt_demo</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

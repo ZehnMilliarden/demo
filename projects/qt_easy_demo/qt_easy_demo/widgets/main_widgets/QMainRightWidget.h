@@ -3,11 +3,13 @@
 #include <QWidget>
 #include <QStackedLayout>
 
+#include "public/qt_demo/StyleWidget.h"
+
 using FunctionList = std::vector< std::pair<QString, QWidget*> >;
 using FunctionListDeclare = std::vector<QString>;
 
 class QMainRightWidget
-    : public QWidget
+    : public StyleWidget
 {
     Q_OBJECT;
     Q_DISABLE_COPY(QMainRightWidget);

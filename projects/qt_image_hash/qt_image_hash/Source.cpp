@@ -5,26 +5,12 @@
 #include <QTextStream>
 
 #include "Widgets\QMainWidget.h"
-
-bool SetStyleSheet(const QString& sheetPath, QApplication& app)
-{
-    QFile file(sheetPath);
-    if (file.open(QFile::ReadOnly))
-    {
-        QString strStylesheet;
-        QTextStream filetext(&file);
-        strStylesheet = filetext.readAll();
-        file.close();
-        app.setStyleSheet(strStylesheet);
-        return true;
-    }
-    return false;
-}
+#include "public\qt_demo\StyleSheet.h"
 
 int main(int argc, char* argv[])
 {
     QApplication app(argc, argv);
-    SetStyleSheet(":/qss/res/style_sheet.css", app);
+    qt_demo::SetStyleSheet(":/qss/res/style_sheet.css", app);
 
     QMainWidget dlg;
     dlg.show();

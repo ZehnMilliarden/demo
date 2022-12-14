@@ -60,12 +60,12 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>./;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./;../../../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>./;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./;../../../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|Win32'" Label="Configuration">
@@ -95,6 +95,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\public\qt_demo\StyleSheet.cpp" />
+    <ClCompile Include="..\..\..\public\qt_demo\StyleWidget.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="widgets\main_widgets\QMainLeftWidget.cpp" />
     <ClCompile Include="widgets\main_widgets\QMainRightWidget.cpp" />
@@ -110,6 +112,16 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="widgets\sub_widgets\QTreeWidgetLab.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="qt_easy_demo.qrc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\style_sheet.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\public\qt_demo\StyleSheet.h" />
+    <QtMoc Include="..\..\..\public\qt_demo\StyleWidget.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

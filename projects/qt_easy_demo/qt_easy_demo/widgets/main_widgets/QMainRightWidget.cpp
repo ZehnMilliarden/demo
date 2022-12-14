@@ -22,8 +22,9 @@ void QMainRightWidget::btnClicked(int nId)
 }
 
 QMainRightWidget::QMainRightWidget(QWidget* parent /*= nullptr*/)
-    : QWidget(parent)
+    : StyleWidget(parent)
 {
+    setObjectName("QMainRightWidget");
     CreateUI();
     AddSubWidgets();
 }

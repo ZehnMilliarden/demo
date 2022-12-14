@@ -30,6 +30,12 @@
     <Filter Include="Objects">
       <UniqueIdentifier>{c178831a-7fc6-46ee-8569-029f629bed94}</UniqueIdentifier>
     </Filter>
+    <Filter Include="public">
+      <UniqueIdentifier>{b3b40579-69f3-43b6-b83c-0afad362c4e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="public\qt_demo">
+      <UniqueIdentifier>{0904d426-19f5-49fe-8947-0ed808d37a53}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -46,6 +52,9 @@
     </ClCompile>
     <ClCompile Include="objects\QHashCalcute.cpp">
       <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\public\qt_demo\StyleSheet.cpp">
+      <Filter>public\qt_demo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -71,5 +80,10 @@
     <None Include="res\style_sheet.css">
       <Filter>Resource Files\qss</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\public\qt_demo\StyleSheet.h">
+      <Filter>public\qt_demo</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,0 +1,12 @@
+QWidget:focus {
+    outline: none; /* 去掉得到焦点时的虚线框 */
+}
+
+QWidget#QTreeWidgetLab {
+    color: aqua;
+    background-color: antiquewhite;
+}
+
+QLabel#QTreeWidgetLabCurrentPath {
+    color: red;
+}
