@@ -10,3 +10,8 @@ QWidget#QTreeWidgetLab {
 QLabel#QTreeWidgetLabCurrentPath {
     color: red;
 }
+
+QWidget#QNormalWidgetLab {
+    color: cadetblue;
+    background-color: aliceblue;
+}

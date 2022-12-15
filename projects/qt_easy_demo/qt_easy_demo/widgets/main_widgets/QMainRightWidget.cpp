@@ -3,6 +3,7 @@
 #include <QLabel>
 
 #include "widgets/sub_widgets/QTreeWidgetLab.h"
+#include "widgets/sub_widgets/QNormalWidgetLab.h"
 
 void QMainRightWidget::btnClicked(int nId)
 {
@@ -53,6 +54,7 @@ void QMainRightWidget::CreateUI()
 void QMainRightWidget::AddSubWidgets()
 {
     AddSubWidget(QString::fromLocal8Bit("树形控件"), new QTreeWidgetLab(this));
+    AddSubWidget(QString::fromLocal8Bit("普通控件"), new QNormalWidgetLab(this));
 }
 
 void QMainRightWidget::AddSubWidget(const QString& txt, QWidget* pWidget)

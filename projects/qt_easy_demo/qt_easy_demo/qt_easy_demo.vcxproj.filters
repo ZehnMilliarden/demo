@@ -62,6 +62,9 @@
     <ClCompile Include="..\..\..\public\qt_demo\StyleWidget.cpp">
       <Filter>public\qt_demo</Filter>
     </ClCompile>
+    <ClCompile Include="widgets\sub_widgets\QNormalWidgetLab.cpp">
+      <Filter>widgets\sub_widgets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="widgets\main_widgets\QMainWidget.h">
@@ -78,6 +81,9 @@
     </QtMoc>
     <QtMoc Include="..\..\..\public\qt_demo\StyleWidget.h">
       <Filter>public\qt_demo</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\sub_widgets\QNormalWidgetLab.h">
+      <Filter>widgets\sub_widgets</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
