@@ -1,20 +1,21 @@
 #pragma once
 
-#include <QWidget>
-#include <QVBoxLayout>
+#include <QListView>
 #include <QPushButton>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
 
 #include "public/qt_demo/StyleWidget.h"
 
-class QNormalWidgetLab
+class QListWidgetLab
     : public qt_demo::StyleWidget
 {
     Q_OBJECT;
-    Q_DISABLE_COPY(QNormalWidgetLab);
+    Q_DISABLE_COPY(QListWidgetLab);
 
 public:
-    explicit QNormalWidgetLab(QWidget* parent = nullptr);
-    ~QNormalWidgetLab();
+    explicit QListWidgetLab(QWidget* parent = nullptr);
+    ~QListWidgetLab();
 
 protected:
     void CreateUI();
@@ -25,7 +26,8 @@ protected Q_SLOTS:
     void clicked(bool checked = false);
 
 private:
+    QListView* m_pListView = nullptr;
+    QPushButton* m_pMainBtn = nullptr;
     QVBoxLayout* m_pMainLayout = nullptr;
     QHBoxLayout* m_pCommandLayout = nullptr;
-    QPushButton* m_pMainBtn = nullptr;
 };

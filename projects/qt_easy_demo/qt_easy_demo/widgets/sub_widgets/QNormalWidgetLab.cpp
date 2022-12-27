@@ -1,7 +1,7 @@
 #include "QNormalWidgetLab.h"
 
 QNormalWidgetLab::QNormalWidgetLab(QWidget* parent /*= nullptr*/)
-    : StyleWidget(parent)
+    : qt_demo::StyleWidget(parent)
 {
     setObjectName("QNormalWidgetLab");
     CreateUI();
@@ -21,7 +21,7 @@ void QNormalWidgetLab::CreateUI()
     m_pMainLayout->setAlignment(Qt::AlignTop);
 
     m_pCommandLayout = new QHBoxLayout(this);
-    m_pMainLayout->addLayout(m_pMainLayout);
+    m_pMainLayout->addLayout(m_pCommandLayout);
     m_pCommandLayout->setAlignment(Qt::AlignLeft);
 
     m_pMainBtn = new QPushButton(this);

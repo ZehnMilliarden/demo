@@ -9,7 +9,7 @@ using FunctionList = std::vector< std::pair<QString, QWidget*> >;
 using FunctionListDeclare = std::vector<QString>;
 
 class QMainRightWidget
-    : public StyleWidget
+    : public qt_demo::StyleWidget
 {
     Q_OBJECT;
     Q_DISABLE_COPY(QMainRightWidget);

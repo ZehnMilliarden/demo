@@ -4,6 +4,7 @@
 
 #include "widgets/sub_widgets/QTreeWidgetLab.h"
 #include "widgets/sub_widgets/QNormalWidgetLab.h"
+#include "widgets/sub_widgets/QListWidgetLab.h"
 
 void QMainRightWidget::btnClicked(int nId)
 {
@@ -23,7 +24,7 @@ void QMainRightWidget::btnClicked(int nId)
 }
 
 QMainRightWidget::QMainRightWidget(QWidget* parent /*= nullptr*/)
-    : StyleWidget(parent)
+    : qt_demo::StyleWidget(parent)
 {
     setObjectName("QMainRightWidget");
     CreateUI();
@@ -55,6 +56,7 @@ void QMainRightWidget::AddSubWidgets()
 {
     AddSubWidget(QString::fromLocal8Bit("树形控件"), new QTreeWidgetLab(this));
     AddSubWidget(QString::fromLocal8Bit("普通控件"), new QNormalWidgetLab(this));
+    AddSubWidget(QString::fromLocal8Bit("列表控件"), new QListWidgetLab(this));
 }
 
 void QMainRightWidget::AddSubWidget(const QString& txt, QWidget* pWidget)

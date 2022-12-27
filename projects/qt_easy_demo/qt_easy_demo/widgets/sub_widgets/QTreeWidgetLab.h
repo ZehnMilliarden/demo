@@ -12,7 +12,7 @@
 // ²Î¿¼×ÊÁÏ2: https://www.cnblogs.com/dpsying/p/13622873.html
 
 class QTreeWidgetLab
-    : public StyleWidget
+    : public qt_demo::StyleWidget
 {
     Q_OBJECT;
     Q_DISABLE_COPY(QTreeWidgetLab);

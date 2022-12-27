@@ -4,7 +4,7 @@
 #include <QDebug>
 
 QTreeWidgetLab::QTreeWidgetLab(QWidget* parent /*= nullptr*/)
-    : StyleWidget(parent)
+    : qt_demo::StyleWidget(parent)
 {
     setObjectName("QTreeWidgetLab");
     CreateUI();

@@ -15,3 +15,8 @@ QWidget#QNormalWidgetLab {
     color: cadetblue;
     background-color: aliceblue;
 }
+
+QWidget#QListWidgetLab {
+    color: lightcyan;
+    background-color: lightcyan;
+}
