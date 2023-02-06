@@ -3,21 +3,24 @@
 
 #include <QWidget>
 
-class StyleWidget : public QWidget
+namespace qt_demo
 {
-    Q_OBJECT
-public:
-    explicit StyleWidget(QWidget* parent = nullptr);
+    class StyleWidget : public QWidget
+    {
+        Q_OBJECT
+    public:
+        explicit StyleWidget(QWidget* parent = nullptr);
 
-public Q_SLOTS:
+    public Q_SLOTS:
 
-Q_SIGNALS:
+    Q_SIGNALS:
 
-protected:
-    virtual void paintEvent(QPaintEvent* event) override;
+    protected:
+        virtual void paintEvent(QPaintEvent* event) override;
 
-private:
-    Q_DISABLE_COPY(StyleWidget)
-};
+    private:
+        Q_DISABLE_COPY(StyleWidget)
+    };
+}
 
 #endif //! KStyleBaseWidget_H__
