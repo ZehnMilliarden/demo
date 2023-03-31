@@ -1,0 +1,5 @@
+qt_image_hash/*.user
+qt_image_hash/*.sln
+qt_image_hash/Debug
+qt_image_hash/Release
+qt_image_hash/.vs

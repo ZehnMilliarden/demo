@@ -1,0 +1,5 @@
+qt_easy_demo/*.user
+qt_easy_demo/*.sln
+qt_easy_demo/Debug
+qt_easy_demo/Release
+qt_easy_demo/.vs

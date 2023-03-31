@@ -1,0 +1,5 @@
+cppdemos/*.user
+cppdemos/*.sln
+cppdemos/Debug
+cppdemos/Release
+cppdemos/.vs
