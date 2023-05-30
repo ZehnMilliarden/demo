@@ -4,7 +4,9 @@
 
 class RedDotWidget : public QWidget
 {
-    Q_OBJECT
+    Q_OBJECT;
+    Q_DISABLE_COPY(RedDotWidget);
+
 public:
     explicit RedDotWidget(QWidget* parent = nullptr);
     void setText(const QString& text);

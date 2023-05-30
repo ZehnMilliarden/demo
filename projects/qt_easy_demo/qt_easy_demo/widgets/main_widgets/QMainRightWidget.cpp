@@ -60,8 +60,8 @@ void QMainRightWidget::AddSubWidgets()
     AddSubWidget(QString::fromLocal8Bit("列表控件"), new QListWidgetLab(this));
 
     RedDotWidget* pWidget = new RedDotWidget(this);
-    pWidget->setText("Hello World111111111111111111111");
-    pWidget->setFixedHeight(10);
+    pWidget->setText("Hello World");
+    //pWidget->setFixedHeight(12);
     AddSubWidget(QString::fromLocal8Bit("红点控件"), pWidget);
 }
 

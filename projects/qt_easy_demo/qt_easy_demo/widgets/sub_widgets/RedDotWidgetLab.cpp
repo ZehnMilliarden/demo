@@ -5,15 +5,15 @@
 RedDotWidget::RedDotWidget(QWidget* parent) : QWidget(parent)
 {
     setFixedHeight(30);
-    m_textColor = QColor("#FFFFFF");
-    m_bgColor = QColor("#F45633");
+    m_textColor = QColor(0xFF,0xFF,0xFF);
+    m_bgColor = QColor(0xF4,0x56,0x33);
 }
 
 void RedDotWidget::setText(const QString& text)
 {
     m_text = text;
     QFontMetrics metrics(font());
-    setFixedWidth(metrics.width(text) + height());
+    setFixedWidth(metrics.width(text) + height()*2);
     update();
 }
 
@@ -59,5 +59,6 @@ void RedDotWidget::paintEvent(QPaintEvent* event)
     QFont font = this->font();
     font.setPointSize(m_fontSize);
     painter.setFont(font);
+    painter.setPen(m_textColor);
     painter.drawText(rect(), Qt::AlignCenter, m_text);
 }
