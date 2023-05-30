@@ -68,7 +68,7 @@
     <ClCompile Include="widgets\sub_widgets\QListWidgetLab.cpp">
       <Filter>widgets\sub_widgets</Filter>
     </ClCompile>
-    <ClCompile Include="widgets\sub_widgets\RedDotWidgetLab.cpp">
+    <ClCompile Include="widgets\sub_widgets\QRedDotWidgetLab.cpp">
       <Filter>widgets\sub_widgets</Filter>
     </ClCompile>
   </ItemGroup>
@@ -94,7 +94,7 @@
     <QtMoc Include="widgets\sub_widgets\QListWidgetLab.h">
       <Filter>widgets\sub_widgets</Filter>
     </QtMoc>
-    <QtMoc Include="widgets\sub_widgets\RedDotWidgetLab.h">
+    <QtMoc Include="widgets\sub_widgets\QRedDotWidgetLab.h">
       <Filter>widgets\sub_widgets</Filter>
     </QtMoc>
   </ItemGroup>
@@ -111,6 +111,9 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\public\qt_demo\StyleSheet.h">
       <Filter>public\qt_demo</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\sub_widgets\QSubWidgetsList.h">
+      <Filter>widgets\sub_widgets</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

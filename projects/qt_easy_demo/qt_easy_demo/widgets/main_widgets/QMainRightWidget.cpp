@@ -2,10 +2,7 @@
 
 #include <QLabel>
 
-#include "widgets/sub_widgets/QTreeWidgetLab.h"
-#include "widgets/sub_widgets/QNormalWidgetLab.h"
-#include "widgets/sub_widgets/QListWidgetLab.h"
-#include "widgets/sub_widgets/RedDotWidgetLab.h"
+#include "widgets/sub_widgets/QSubWidgetsList.h"
 
 void QMainRightWidget::btnClicked(int nId)
 {
@@ -58,11 +55,7 @@ void QMainRightWidget::AddSubWidgets()
     AddSubWidget(QString::fromLocal8Bit("树形控件"), new QTreeWidgetLab(this));
     AddSubWidget(QString::fromLocal8Bit("普通控件"), new QNormalWidgetLab(this));
     AddSubWidget(QString::fromLocal8Bit("列表控件"), new QListWidgetLab(this));
-
-    RedDotWidget* pWidget = new RedDotWidget(this);
-    pWidget->setText("Hello World");
-    //pWidget->setFixedHeight(12);
-    AddSubWidget(QString::fromLocal8Bit("红点控件"), pWidget);
+    AddSubWidget(QString::fromLocal8Bit("红点控件"), new QRedDotWidgetLab(this));
 }
 
 void QMainRightWidget::AddSubWidget(const QString& txt, QWidget* pWidget)
