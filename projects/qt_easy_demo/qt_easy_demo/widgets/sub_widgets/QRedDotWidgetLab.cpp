@@ -13,8 +13,10 @@ QRedDotWidget::QRedDotWidget(QWidget* parent) : QWidget(parent)
 void QRedDotWidget::setText(const QString& text)
 {
     m_text = text;
-    QFontMetrics metrics(font());
-    setFixedWidth(metrics.width(text) + height()*2);
+    QFont font = this->font(); 
+    font.setPointSize(m_fontSize);
+    QFontMetrics metrics(font);
+    setFixedWidth(metrics.width(text) + height());
     update();
 }
 
@@ -104,8 +106,8 @@ void QRedDotWidgetLab::CreateData()
 void QRedDotWidgetLab::CreateConnect()
 {
     connect(
-        m_pBtnMake, 
-        &QPushButton::click, 
+        m_pBtnMake,
+        &QPushButton::released,
         this, 
         &QRedDotWidgetLab::btnTxtConfirm);
 }
