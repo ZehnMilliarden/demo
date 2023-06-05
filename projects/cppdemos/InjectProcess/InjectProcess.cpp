@@ -6,10 +6,37 @@
 
 #include "cmdline.h"
 
+bool AdjustPrivilege()
+{
+    HANDLE hToken;
+    TOKEN_PRIVILEGES tkp;
+
+    // 获取当前进程的令牌
+    if (!OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hToken)) {
+        return false;
+    }
+
+    // 获取Debug权限的LUID
+    if (!LookupPrivilegeValue(NULL, SE_DEBUG_NAME, &tkp.Privileges[0].Luid)) {
+        return false;
+    }
+
+    tkp.PrivilegeCount = 1;
+    tkp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
+
+    // 提升进程权限
+    if (!AdjustTokenPrivileges(hToken, FALSE, &tkp, sizeof(tkp), NULL, NULL)) {
+        return false;
+    }
+
+    return true;
+}
+
 void InjectDllToProc(
     const std::string& proc, 
     const std::string& dll)
 {
+
     STARTUPINFOA si = { sizeof(si) };
     PROCESS_INFORMATION pi;
     if (!::CreateProcessA(
@@ -57,7 +84,7 @@ void InjectDllToProc(
 
     HANDLE hResumeEvent = ::CreateEvent(NULL, FALSE, FALSE, L"Global\\{e84eb5ff-9840-4fc4-bc97-650d259a27d8}");
 
-    HANDLE hRemoteThread = CreateRemoteThread(
+    HANDLE hRemoteThread = ::CreateRemoteThread(
         pi.hProcess, 
         NULL, 
         0, 
@@ -68,7 +95,12 @@ void InjectDllToProc(
 
     if (!hRemoteThread)
     {
-        std::cout << "Error CreateRemoteThread" << std::endl;
+        std::cout << "Error CreateRemoteThread, GetLastError: " << ::GetLastError() <<std::endl;
+        if (hResumeEvent)
+        {
+            ::CloseHandle(hResumeEvent);
+        }
+        ::ResumeThread(pi.hThread);
         return;
     }
 
@@ -77,6 +109,7 @@ void InjectDllToProc(
     if (hResumeEvent)
     {
         ::WaitForSingleObject(hResumeEvent, INFINITE);
+        ::CloseHandle(hResumeEvent);
     }
 
     ::ResumeThread(pi.hThread);
@@ -99,6 +132,7 @@ int main(int argc, char* argv[])
     std::string proc = param.get<std::string>("proc");
     std::string dll  = param.get<std::string>("dll");
 
+    AdjustPrivilege();
     InjectDllToProc(proc, dll);
 
     return 0;

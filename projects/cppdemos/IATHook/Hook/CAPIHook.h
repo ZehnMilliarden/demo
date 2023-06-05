@@ -29,7 +29,7 @@ private:
     static FARPROC WINAPI GetProcess(HMODULE hModule, PCSTR pszProcName);
 
 private:
-    static void HookMsgOutPut(const std::string& msg);
+    static void HookMsgOutPut(const std::string& msg, HMODULE hModule = NULL);
     static void HookMsgOutPutW(const std::wstring& msg);
     static void NotifyMainThreadRunning();
 

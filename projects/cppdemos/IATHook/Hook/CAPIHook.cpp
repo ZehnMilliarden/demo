@@ -1,14 +1,12 @@
 
-#include "pch.h"
 #include "CAPIHOOK.h"  
 #include <Tlhelp32.h>  
+#include <codecvt>
+#include <sstream>
+
+#include "CAPIHookMapModuleToName.h"
 
 CAPIHOOK* CAPIHOOK::sm_pHeader = NULL;
-//CAPIHOOK CAPIHOOK::sm_LoadLibraryA("kernel32.dll", "LoadLibraryA", (PROC)CAPIHOOK::LoadLibraryA, TRUE);
-//CAPIHOOK CAPIHOOK::sm_LoadLibraryW("kernel32.dll", "LoadLibraryW", (PROC)CAPIHOOK::LoadLibraryW, TRUE);
-//CAPIHOOK CAPIHOOK::sm_LoadLibraryExA("kernel32.dll", "LoadLibraryExA", (PROC)CAPIHOOK::LoadLibraryExA, TRUE);
-//CAPIHOOK CAPIHOOK::sm_LoadLibraryExW("kernel32.dll", "LoadLibraryExW", (PROC)CAPIHOOK::LoadLibraryExW, TRUE);
-//CAPIHOOK CAPIHOOK::sm_GetProcAddress("kernel32.dll", "GetProcAddress", (PROC)CAPIHOOK::GetProcess, TRUE);
 
 CAPIHOOK::CAPIHOOK(
     const char* lpszModName, 
@@ -64,12 +62,21 @@ DWORD WINAPI CAPIHOOK::ThreadHook(LPVOID lpParamer)
 
 BOOL CAPIHOOK::HookImpl()
 {
-    ::MessageBox(NULL, NULL, NULL, NULL);
-    static CAPIHOOK sm_LoadLibraryA("kernel32.dll", "LoadLibraryA", (PROC)CAPIHOOK::LoadLibraryA, TRUE);
-    static CAPIHOOK sm_LoadLibraryW("kernel32.dll", "LoadLibraryW", (PROC)CAPIHOOK::LoadLibraryW, TRUE);
-    static CAPIHOOK sm_LoadLibraryExA("kernel32.dll", "LoadLibraryExA", (PROC)CAPIHOOK::LoadLibraryExA, TRUE);
-    static CAPIHOOK sm_LoadLibraryExW("kernel32.dll", "LoadLibraryExW", (PROC)CAPIHOOK::LoadLibraryExW, TRUE);
-    static CAPIHOOK sm_GetProcAddress("kernel32.dll", "GetProcAddress", (PROC)CAPIHOOK::GetProcess, TRUE);
+    ::MessageBox(NULL, L"Hook Start", L"Notice", NULL);
+
+    try
+    {
+        static CAPIHOOK sm_LoadLibraryA("kernel32.dll", "LoadLibraryA", (PROC)CAPIHOOK::LoadLibraryA, TRUE);
+        static CAPIHOOK sm_LoadLibraryW("kernel32.dll", "LoadLibraryW", (PROC)CAPIHOOK::LoadLibraryW, TRUE);
+        static CAPIHOOK sm_LoadLibraryExA("kernel32.dll", "LoadLibraryExA", (PROC)CAPIHOOK::LoadLibraryExA, TRUE);
+        static CAPIHOOK sm_LoadLibraryExW("kernel32.dll", "LoadLibraryExW", (PROC)CAPIHOOK::LoadLibraryExW, TRUE);
+        static CAPIHOOK sm_GetProcAddress("kernel32.dll", "GetProcAddress", (PROC)CAPIHOOK::GetProcess, TRUE);
+    }
+    catch (...)
+    {
+
+    }
+
     return TRUE;
 }
 
@@ -91,7 +98,9 @@ void CAPIHOOK::HookNewlyLoadedModule(HMODULE hModule, DWORD dwFlags)
 //防止程序运行期间动态调用API函数  
 FARPROC WINAPI CAPIHOOK::GetProcess(HMODULE hModule, PCSTR pszProcName)
 {
-    //得到函数的真实地址  
+    //得到函数的真实地址
+    HookMsgOutPut(pszProcName, hModule);
+
     FARPROC pfn = ::GetProcAddress(hModule, pszProcName);
     //遍历列表 看是不是要HOOK的函数  
     CAPIHOOK* p = sm_pHeader;
@@ -105,21 +114,30 @@ FARPROC WINAPI CAPIHOOK::GetProcess(HMODULE hModule, PCSTR pszProcName)
         p = p->m_pNext;
     }
     return pfn;
-
 }
 
-void CAPIHOOK::HookMsgOutPut(const std::string& msg)
+void CAPIHOOK::HookMsgOutPut(
+    const std::string& msg,
+    HMODULE hModule)
 {
-    std::stringstream str_log;
-    str_log << "Hook Msg: " << msg;
-    ::OutputDebugStringA(str_log.str().c_str());
+    std::wstringstream ss; 
+    ss << L"Hook Msg: ";
+
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+    ss << converter.from_bytes(msg);
+    if (hModule)
+    {
+        ss << L" ["  << CAPIHookMapModuleToName::Instance().GetName(hModule) << L"]";
+    }
+    
+    ::OutputDebugStringW(ss.str().c_str());
 }
 
 void CAPIHOOK::HookMsgOutPutW(const std::wstring& msg)
 {
-    std::wstringstream str_log;
-    str_log << "Hook Msg: " << msg;
-    ::OutputDebugStringW(str_log.str().c_str());
+    wchar_t szDbg[MAX_PATH] = { 0 };
+    wsprintf(szDbg, L"Hook Msg: %s", msg.c_str());
+    ::OutputDebugStringW(szDbg);
 }
 
 void CAPIHOOK::NotifyMainThreadRunning()
@@ -161,7 +179,8 @@ void CAPIHOOK::ReplaceIATEntryInOneMod(LPCSTR pszExportMod, PROC pfnCurrent, PRO
         while (pThunk->u1.Function)
         {
             //取得函数名称  
-            char* pszFuncName = (char*)((BYTE*)hModCaller + pThunk->u1.AddressOfData + 2); //函数名前面有两个..  
+            IMAGE_IMPORT_BY_NAME* pImportByName = (IMAGE_IMPORT_BY_NAME*)((BYTE*)hModCaller + pThunk->u1.AddressOfData);
+            char* pszFuncName = (char*)pImportByName->Name; //函数名在结构体的Name字段中  
             //printf("function name:%-25s,  ", pszFuncName);  
             //取得函数地址  
             PDWORD lpAddr = (DWORD*)((BYTE*)hModCaller + pImportDesc->FirstThunk) + n; //从第一个函数的地址，以后每次+4字节  
@@ -169,17 +188,18 @@ void CAPIHOOK::ReplaceIATEntryInOneMod(LPCSTR pszExportMod, PROC pfnCurrent, PRO
             //在这里是比较的函数地址  
             if (*lpAddr == (DWORD)pfnCurrent)  //找到iat中的函数地址  
             {
-                DWORD* lpNewProc = (DWORD*)pfnNewFunc;
+                DWORD dwNewProc = (DWORD)pfnNewFunc;
                 MEMORY_BASIC_INFORMATION mbi;
                 DWORD dwOldProtect;
                 //修改内存页的保护属性  
                 ::VirtualQuery(lpAddr, &mbi, sizeof(MEMORY_BASIC_INFORMATION));
                 ::VirtualProtect(lpAddr, sizeof(DWORD), PAGE_READWRITE, &dwOldProtect);
-                ::WriteProcessMemory(GetCurrentProcess(), lpAddr, &lpNewProc, sizeof(DWORD), NULL);
+                ::WriteProcessMemory(GetCurrentProcess(), lpAddr, &dwNewProc, sizeof(DWORD), NULL);
                 ::VirtualProtect(lpAddr, sizeof(DWORD), dwOldProtect, NULL);
                 return;
             }
             n++; //每次增加一个DWORD  
+            pThunk++; //指向下一个IMAGE_THUNK_DATA结构体  
         }
     }
 }
@@ -214,6 +234,7 @@ void CAPIHOOK::ReplaceIATEntryInAllMods(LPCSTR pszExportMod, PROC pfnCurrent, PR
     { //对每一个模块  
         if (me32.hModule != hModThis)
         {
+            CAPIHookMapModuleToName::Instance().Insert(me32.hModule, me32.szModule);
             ReplaceIATEntryInOneMod(pszExportMod, pfnCurrent, pfnNewFunc, me32.hModule);
         }
     } while (Module32Next(hModuleSnap, &me32));
@@ -225,28 +246,48 @@ void CAPIHOOK::ReplaceIATEntryInAllMods(LPCSTR pszExportMod, PROC pfnCurrent, PR
 HMODULE WINAPI CAPIHOOK::LoadLibraryA(LPCSTR lpFileName)
 {
     HookMsgOutPut(lpFileName);
-    HMODULE hModule = LoadLibraryA(lpFileName);
-    HookNewlyLoadedModule(hModule, 0); //这个函数中忆检测hModule 了  
+    HMODULE hModule = ::LoadLibraryA(lpFileName);
+    if (hModule)
+    {
+        CAPIHookMapModuleToName::Instance().Insert(hModule, lpFileName);
+        HookNewlyLoadedModule(hModule, 0); //这个函数中忆检测hModule 了  
+    }
     return hModule;
 }
 HMODULE WINAPI CAPIHOOK::LoadLibraryW(LPCWSTR lpFileName)
 {
     HookMsgOutPutW(lpFileName);
-    HMODULE hModule = LoadLibraryW(lpFileName);
-    HookNewlyLoadedModule(hModule, 0); //这个函数中忆检测hModule 了  
+    HMODULE hModule = ::LoadLibraryW(lpFileName);
+    if (hModule)
+    {
+        CAPIHookMapModuleToName::Instance().Insert(hModule, lpFileName);
+        HookNewlyLoadedModule(hModule, 0); //这个函数中忆检测hModule 了  
+    }
     return hModule;
 }
 HMODULE WINAPI CAPIHOOK::LoadLibraryExA(LPCSTR lpFileName, HANDLE hFile, DWORD dwFlags)
 {
     HookMsgOutPut(lpFileName);
-    HMODULE hModule = LoadLibraryExA(lpFileName, hFile, dwFlags);
-    HookNewlyLoadedModule(hModule, dwFlags); //这个函数中忆检测hModule 了  
+    HMODULE hModule = ::LoadLibraryExA(lpFileName, hFile, dwFlags);
+
+    if (hModule)
+    {
+        CAPIHookMapModuleToName::Instance().Insert(hModule, lpFileName);
+        HookNewlyLoadedModule(hModule, dwFlags); //这个函数中忆检测hModule 了  
+    }
+
     return hModule;
 }
 HMODULE WINAPI CAPIHOOK::LoadLibraryExW(LPCWSTR lpFileName, HANDLE hFile, DWORD dwFlags)
 {
     HookMsgOutPutW(lpFileName);
-    HMODULE hModule = LoadLibraryExW(lpFileName, hFile, dwFlags);
-    HookNewlyLoadedModule(hModule, dwFlags); //这个函数中忆检测hModule 了  
+    HMODULE hModule = ::LoadLibraryExW(lpFileName, hFile, dwFlags);
+
+    if (hModule)
+    {
+        CAPIHookMapModuleToName::Instance().Insert(hModule, lpFileName);
+        HookNewlyLoadedModule(hModule, dwFlags); //这个函数中忆检测hModule 了  
+    }
+
     return hModule;
 }
