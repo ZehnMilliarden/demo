@@ -4,3 +4,4 @@
 #include "QNormalWidgetLab.h"
 #include "QListWidgetLab.h"
 #include "QRedDotWidgetLab.h"
+#include "QMakeDownEditLab.h"

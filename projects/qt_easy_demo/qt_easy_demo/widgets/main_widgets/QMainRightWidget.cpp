@@ -56,6 +56,7 @@ void QMainRightWidget::AddSubWidgets()
     AddSubWidget(QString::fromLocal8Bit("普通控件"), new QNormalWidgetLab(this));
     AddSubWidget(QString::fromLocal8Bit("列表控件"), new QListWidgetLab(this));
     AddSubWidget(QString::fromLocal8Bit("红点控件"), new QRedDotWidgetLab(this));
+    AddSubWidget(QString::fromLocal8Bit("MD语法"), new QMakeDownEditLab(this));
 }
 
 void QMainRightWidget::AddSubWidget(const QString& txt, QWidget* pWidget)

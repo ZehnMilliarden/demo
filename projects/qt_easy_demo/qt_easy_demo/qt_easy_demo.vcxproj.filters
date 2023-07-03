@@ -71,6 +71,9 @@
     <ClCompile Include="widgets\sub_widgets\QRedDotWidgetLab.cpp">
       <Filter>widgets\sub_widgets</Filter>
     </ClCompile>
+    <ClCompile Include="widgets\sub_widgets\QMakeDownEditLab.cpp">
+      <Filter>widgets\sub_widgets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="widgets\main_widgets\QMainWidget.h">
@@ -95,6 +98,9 @@
       <Filter>widgets\sub_widgets</Filter>
     </QtMoc>
     <QtMoc Include="widgets\sub_widgets\QRedDotWidgetLab.h">
+      <Filter>widgets\sub_widgets</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\sub_widgets\QMakeDownEditLab.h">
       <Filter>widgets\sub_widgets</Filter>
     </QtMoc>
   </ItemGroup>

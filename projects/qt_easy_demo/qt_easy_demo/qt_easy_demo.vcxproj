@@ -99,6 +99,7 @@
     <ClCompile Include="widgets\main_widgets\QMainRightWidget.cpp" />
     <ClCompile Include="widgets\main_widgets\QMainWidget.cpp" />
     <ClCompile Include="widgets\sub_widgets\QListWidgetLab.cpp" />
+    <ClCompile Include="widgets\sub_widgets\QMakeDownEditLab.cpp" />
     <ClCompile Include="widgets\sub_widgets\QNormalWidgetLab.cpp" />
     <ClCompile Include="widgets\sub_widgets\QTreeWidgetLab.cpp" />
     <ClCompile Include="widgets\sub_widgets\QRedDotWidgetLab.cpp" />
@@ -121,6 +122,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\public\qt_demo\StyleSheet.h" />
+    <QtMoc Include="widgets\sub_widgets\QMakeDownEditLab.h" />
     <ClInclude Include="widgets\sub_widgets\QSubWidgetsList.h" />
     <QtMoc Include="widgets\sub_widgets\QRedDotWidgetLab.h" />
     <QtMoc Include="widgets\sub_widgets\QListWidgetLab.h" />
