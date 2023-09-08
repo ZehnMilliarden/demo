@@ -2,10 +2,33 @@
 //
 
 #include <iostream>
+#include <Windows.h>
+
+#include <atlbase.h>
+#include <atlcom.h>
+
+#include "interface/InfComDemo.h"
+#include "EasyComLoader.h"
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    
+    std::shared_ptr<EasyComLoader<InfComDemo, CLSID_ClsComDemo>> loader =
+    std::make_shared<EasyComLoader<InfComDemo, CLSID_ClsComDemo>>();
+    loader->Load(L"ComDll.dll");
+    CComPtr<InfComDemo> pInfComDemo;
+    loader->CreateInstance(pInfComDemo);
+    pInfComDemo->Method1();
+    pInfComDemo->Method2();
+
+    std::shared_ptr<EasyComLoader<InfComDemo, CLSID_ClsComDemo>> loader2 = loader;
+
+    CComPtr<InfComDemo> pInfComDemo2;
+    loader2->CreateInstance(pInfComDemo2);
+    pInfComDemo2->Method1();
+    pInfComDemo2->Method2();
+
+    return 0;
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
