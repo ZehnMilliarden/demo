@@ -6,6 +6,7 @@
 CComModule _AtlModule;
 
 BEGIN_OBJECT_MAP(ObjMap)
+    // DllGetClassObject -> CComModule::GetClassObject 优先查找此处
     OBJECT_ENTRY(CLSID_ClsComDemo, ClsComDemo)
 END_OBJECT_MAP()
 

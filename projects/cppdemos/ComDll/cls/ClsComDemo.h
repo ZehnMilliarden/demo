@@ -21,7 +21,7 @@ public:
     ClsComDemo();
     ~ClsComDemo();
 
-    // DECLARE_CLASSFACTORY_SINGLETON(ClsComDemo);
+    DECLARE_CLASSFACTORY_SINGLETON(ClsComDemo);
     DECLARE_NO_REGISTRY()
     DECLARE_NOT_AGGREGATABLE(ThisClass)
     BEGIN_COM_MAP(ThisClass)
@@ -34,3 +34,7 @@ public: //InfComDemo
 };
 
 using CoClsComDemo = CComObject<ClsComDemo>;
+
+// DllGetClassObject -> CComModule::GetClassObject ->
+// AtlComModuleGetClassObject 前置步骤未找到，则查找此处
+OBJECT_ENTRY_AUTO(CLSID_ClsComDemo, ClsComDemo);

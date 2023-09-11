@@ -19,14 +19,6 @@ int main()
     loader->CreateInstance(pInfComDemo);
     pInfComDemo->Method1();
     pInfComDemo->Method2();
-
-    std::shared_ptr<EasyComLoader<InfComDemo, CLSID_ClsComDemo>> loader2 = loader;
-
-    CComPtr<InfComDemo> pInfComDemo2;
-    loader2->CreateInstance(pInfComDemo2);
-    pInfComDemo2->Method1();
-    pInfComDemo2->Method2();
-
     return 0;
 }
 
