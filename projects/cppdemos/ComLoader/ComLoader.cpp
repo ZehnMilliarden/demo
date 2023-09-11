@@ -12,7 +12,6 @@
 
 int main()
 {
-    
     std::shared_ptr<EasyComLoader<InfComDemo, CLSID_ClsComDemo>> loader =
     std::make_shared<EasyComLoader<InfComDemo, CLSID_ClsComDemo>>();
     loader->Load(L"ComDll.dll");

@@ -21,6 +21,7 @@ public:
     ClsComDemo();
     ~ClsComDemo();
 
+    // DECLARE_CLASSFACTORY_SINGLETON(ClsComDemo);
     DECLARE_NO_REGISTRY()
     DECLARE_NOT_AGGREGATABLE(ThisClass)
     BEGIN_COM_MAP(ThisClass)

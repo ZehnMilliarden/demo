@@ -1,6 +1,9 @@
 #include "pch.h"
 #include "ClsComDemo.h"
 
+#include <iostream>
+#include <sstream>
+
 ClsComDemo::ClsComDemo()
 {
 
@@ -13,12 +16,16 @@ ClsComDemo::~ClsComDemo()
 
 HRESULT STDMETHODCALLTYPE ClsComDemo::Method1()
 {
-    ::OutputDebugString(L"Method1\r\n");
+    std::wstringstream ss;
+    ss << this << L" Method1\r\n";
+    ::OutputDebugString(ss.str().c_str());
     return S_OK;
 }
 
 HRESULT STDMETHODCALLTYPE ClsComDemo::Method2()
 {
-    ::OutputDebugString(L"Method2\r\n");
+    std::wstringstream ss;
+    ss << this << L" Method2\r\n";
+    ::OutputDebugString(ss.str().c_str());
     return S_OK;
 }
