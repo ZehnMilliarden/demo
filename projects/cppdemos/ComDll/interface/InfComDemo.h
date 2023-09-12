@@ -12,3 +12,10 @@ InfComDemo : IUnknown
     virtual HRESULT STDMETHODCALLTYPE Method1() = 0;
     virtual HRESULT STDMETHODCALLTYPE Method2() = 0;
 };
+
+MIDL_INTERFACE("13fb16b2-25ff-4c83-a7fa-375107e00267")
+InfComDemoEx : InfComDemo
+{
+    virtual HRESULT STDMETHODCALLTYPE Method3() = 0;
+    virtual HRESULT STDMETHODCALLTYPE Method4() = 0;
+};

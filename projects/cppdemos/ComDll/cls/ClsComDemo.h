@@ -9,7 +9,7 @@
 #include "interface/InfComDemo.h"
 
 class ATL_NO_VTABLE ClsComDemo
-    : public InfComDemo
+    : public InfComDemoEx
     , public CComObjectRootEx<CComMultiThreadModel>
     , public CComCoClass<ClsComDemo, &CLSID_ClsComDemo>
 {
@@ -26,11 +26,14 @@ public:
     DECLARE_NOT_AGGREGATABLE(ThisClass)
     BEGIN_COM_MAP(ThisClass)
         COM_INTERFACE_ENTRY(InfComDemo)
+        COM_INTERFACE_ENTRY(InfComDemoEx)
     END_COM_MAP()
 
 public: //InfComDemo
     virtual HRESULT STDMETHODCALLTYPE Method1() override;
     virtual HRESULT STDMETHODCALLTYPE Method2() override;
+    virtual HRESULT STDMETHODCALLTYPE Method3() override;
+    virtual HRESULT STDMETHODCALLTYPE Method4() override;
 };
 
 using CoClsComDemo = CComObject<ClsComDemo>;
