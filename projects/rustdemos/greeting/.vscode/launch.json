@@ -3,7 +3,7 @@
     "configurations": [
         {
             "name": "(Windows)启动",
-            "preLaunchTask": "build",
+            "preLaunchTask": "rust: cargo build",
             "type": "cppvsdbg",
             "request": "launch",
             "program": "${workspaceFolder}/target/debug/${workspaceFolderBasename}.exe",
