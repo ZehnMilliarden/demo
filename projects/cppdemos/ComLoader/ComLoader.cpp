@@ -13,22 +13,23 @@
 int main()
 {
     std::shared_ptr<EasyComLoader<InfComDemo, CLSID_ClsComDemo>> loader =
-    std::make_shared<EasyComLoader<InfComDemo, CLSID_ClsComDemo>>();
+        std::make_shared<EasyComLoader<InfComDemo, CLSID_ClsComDemo>>();
     loader->Load(L"ComDll.dll");
 
-    CComPtr<InfComDemo> pInfComDemo1;
-    loader->CreateInstance(pInfComDemo1);
+    {
+        CComPtr<InfComDemo> pInfComDemo1;
+        CAdapt<CComPtr<InfComDemo>> pInfComDemo2;
+        loader->CreateInstance(pInfComDemo1);
+        loader->CreateInstance(pInfComDemo2);
 
-    CAdapt<CComPtr<InfComDemo>> pInfComDemo2;
-    loader->CreateInstance(pInfComDemo2);
+        CComPtr<InfComDemoEx> pInfComDemo3 = nullptr;
+        pInfComDemo3 = pInfComDemo1;
 
-    CComPtr<InfComDemoEx> pInfComDemo3 = nullptr; 
-    pInfComDemo3 = pInfComDemo1;
-
-    pInfComDemo3->Method1();
-    pInfComDemo3->Method2();
-    pInfComDemo3->Method3();
-    pInfComDemo3->Method4();
+        pInfComDemo3->Method1();
+        pInfComDemo3->Method2();
+        pInfComDemo3->Method3();
+        pInfComDemo3->Method4();
+    }
 
     return 0;
 }

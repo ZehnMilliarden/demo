@@ -7,6 +7,10 @@
 template<class T, const CLSID& clsid >
 class EasyComLoader 
 {
+
+    typedef HRESULT(__stdcall* CREATE_COM_OBJECT_FUNC)(REFCLSID, REFIID, LPVOID*);
+    typedef HRESULT(__stdcall* DLL_CAN_UNLOAD_FUNC)();
+
 public:
     EasyComLoader() {
 
@@ -31,9 +35,12 @@ public:
             return false;
         }
 
-        typedef HRESULT(__stdcall* CREATE_COM_OBJECT_FUNC)(REFCLSID, REFIID, LPVOID*);
+        
         CREATE_COM_OBJECT_FUNC pCreateFunc = reinterpret_cast<CREATE_COM_OBJECT_FUNC>(
             GetProcAddress(m_hModule, "DllGetClassObject"));
+
+        m_pfDllCanUnload = reinterpret_cast<DLL_CAN_UNLOAD_FUNC>(
+            GetProcAddress(m_hModule, "DllCanUnloadNow"));
 
         if (pCreateFunc == nullptr)
         {
@@ -63,6 +70,11 @@ public:
             m_pClassFactory = nullptr;
         }
         
+        if (S_OK != m_pfDllCanUnload())
+        {
+            return;
+        }
+
         if (m_hModule)
         {
             ::FreeLibrary(m_hModule);
@@ -90,4 +102,5 @@ private:
 private:
     HMODULE m_hModule = nullptr;
     CComPtr<IClassFactory> m_pClassFactory = nullptr;
+    DLL_CAN_UNLOAD_FUNC m_pfDllCanUnload = nullptr;
 };
