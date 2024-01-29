@@ -36,6 +36,12 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="cls\ClsComAggDemo.h">
+      <Filter>Cls</Filter>
+    </ClInclude>
+    <ClInclude Include="cls\ClsComInnerDef.h">
+      <Filter>Cls</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -45,6 +51,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="cls\ClsComDemo.cpp">
+      <Filter>Cls</Filter>
+    </ClCompile>
+    <ClCompile Include="cls\ClsComAggDemo.cpp">
       <Filter>Cls</Filter>
     </ClCompile>
   </ItemGroup>

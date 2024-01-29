@@ -2,12 +2,14 @@
 #include "pch.h"
 
 #include "cls/ClsComDemo.h"
+#include "cls/ClsComAggDemo.h"
 
 CComModule _AtlModule;
 
 BEGIN_OBJECT_MAP(ObjMap)
     // DllGetClassObject -> CComModule::GetClassObject 优先查找此处
     OBJECT_ENTRY(CLSID_ClsComDemo, ClsComDemo)
+    OBJECT_ENTRY(CLSID_ClsComAggDemo, ClsComAggDemo)
 END_OBJECT_MAP()
 
 _Use_decl_annotations_

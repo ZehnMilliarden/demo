@@ -158,13 +158,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="cls\ClsComAggDemo.h" />
     <ClInclude Include="cls\ClsComDemo.h" />
+    <ClInclude Include="cls\ClsComInnerDef.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="interface\InfComDemo.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="cls\ClsComAggDemo.cpp" />
     <ClCompile Include="cls\ClsComDemo.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="pch.cpp">
