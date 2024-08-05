@@ -74,6 +74,18 @@
     <ClCompile Include="widgets\sub_widgets\QMakeDownEditLab.cpp">
       <Filter>widgets\sub_widgets</Filter>
     </ClCompile>
+    <ClCompile Include="widgets\sub_widgets\QTabWidgetLab.cpp">
+      <Filter>widgets\sub_widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\sub_widgets\QListViewModel.cpp">
+      <Filter>widgets\sub_widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\sub_widgets\QListViewItemDelegate.cpp">
+      <Filter>widgets\sub_widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\sub_widgets\QDragThumbnail.cpp">
+      <Filter>widgets\sub_widgets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="widgets\main_widgets\QMainWidget.h">
@@ -101,6 +113,18 @@
       <Filter>widgets\sub_widgets</Filter>
     </QtMoc>
     <QtMoc Include="widgets\sub_widgets\QMakeDownEditLab.h">
+      <Filter>widgets\sub_widgets</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\sub_widgets\QTabWidgetLab.h">
+      <Filter>widgets\sub_widgets</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\sub_widgets\QListViewModel.h">
+      <Filter>widgets\sub_widgets</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\sub_widgets\QListViewItemDelegate.h">
+      <Filter>widgets\sub_widgets</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\sub_widgets\QDragThumbnail.h">
       <Filter>widgets\sub_widgets</Filter>
     </QtMoc>
   </ItemGroup>

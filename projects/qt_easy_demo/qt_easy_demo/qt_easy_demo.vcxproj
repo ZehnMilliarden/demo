@@ -13,7 +13,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{3C0AE431-1C98-4746-B12E-72AEAB9878A6}</ProjectGuid>
     <Keyword>QtVS_v304</Keyword>
-    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Debug|Win32'">10.0.19041.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Debug|Win32'">10.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|Win32'">10.0.19041.0</WindowsTargetPlatformVersion>
     <QtMsBuild Condition="'$(QtMsBuild)'=='' OR !Exists('$(QtMsBuild)\qt.targets')">$(MSBuildProjectDirectory)\QtMsBuild</QtMsBuild>
   </PropertyGroup>
@@ -98,9 +98,18 @@
     <ClCompile Include="widgets\main_widgets\QMainLeftWidget.cpp" />
     <ClCompile Include="widgets\main_widgets\QMainRightWidget.cpp" />
     <ClCompile Include="widgets\main_widgets\QMainWidget.cpp" />
+    <ClCompile Include="widgets\sub_widgets\QDragThumbnail.cpp" />
+    <ClCompile Include="widgets\sub_widgets\QListViewItemDelegate.cpp" />
+    <ClCompile Include="widgets\sub_widgets\QListViewModel.cpp" />
     <ClCompile Include="widgets\sub_widgets\QListWidgetLab.cpp" />
     <ClCompile Include="widgets\sub_widgets\QMakeDownEditLab.cpp" />
     <ClCompile Include="widgets\sub_widgets\QNormalWidgetLab.cpp" />
+    <ClCompile Include="widgets\sub_widgets\QTabWidgetLab.cpp">
+      <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">input</DynamicSource>
+      <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(Filename).moc</QtMocFileName>
+      <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">input</DynamicSource>
+      <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(Filename).moc</QtMocFileName>
+    </ClCompile>
     <ClCompile Include="widgets\sub_widgets\QTreeWidgetLab.cpp" />
     <ClCompile Include="widgets\sub_widgets\QRedDotWidgetLab.cpp" />
   </ItemGroup>
@@ -122,7 +131,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\public\qt_demo\StyleSheet.h" />
+    <QtMoc Include="widgets\sub_widgets\QTabWidgetLab.h" />
     <QtMoc Include="widgets\sub_widgets\QMakeDownEditLab.h" />
+    <QtMoc Include="widgets\sub_widgets\QListViewItemDelegate.h" />
+    <QtMoc Include="widgets\sub_widgets\QListViewModel.h" />
+    <QtMoc Include="widgets\sub_widgets\QDragThumbnail.h" />
     <ClInclude Include="widgets\sub_widgets\QSubWidgetsList.h" />
     <QtMoc Include="widgets\sub_widgets\QRedDotWidgetLab.h" />
     <QtMoc Include="widgets\sub_widgets\QListWidgetLab.h" />
