@@ -80,7 +80,7 @@ void QListViewItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem&
 
 QSize QListViewItemDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    return GetDefaultSize();
+    return GetItemSize();
 }
 
 bool QListViewItemDelegate::eventFilter(QObject* pObject, QEvent* pEvent)
@@ -421,7 +421,7 @@ void QListViewItemDelegate::onDragLeave(QDragLeaveEvent* pDragLeaveEvent, QListV
 
 void QListViewItemDelegate::onDragMove(QDragMoveEvent* pDragMoveEvent, QListView* pListView)
 {
-    int nOffset =GetDefaultSize().height() / 2 - 1;
+    int nOffset =GetItemSize().height() / 2 - 1;
     SetHighLiteRow(pListView->indexAt(pDragMoveEvent->pos() - QPoint(0, nOffset)).row());
 
     //offset() = 19 = 40 / 2 - 1，其中40是行高
@@ -497,6 +497,8 @@ void QListViewItemDelegate::onDropEvent(QDropEvent* pDropEvent, QListView* pList
         pModel->insertItem(m_nInsertRow - 1, pItemData);
     }
 
+    UpdateItemSize(pModel->GetItemCount());
+
     pDropEvent->setDropAction(Qt::MoveAction);
     pDropEvent->accept();
 }
@@ -547,9 +549,31 @@ bool QListViewItemDelegate::IsDraging() const
     return m_bIsDraging;
 }
 
-QSize QListViewItemDelegate::GetDefaultSize() const
+QSize QListViewItemDelegate::GetItemSize() const
 {
-    return QSize(100, 50);
+    return m_sizeItem;
+}
+
+void QListViewItemDelegate::SetItemSize(const QSize& size)
+{
+    m_sizeItem = size;
+}
+
+void QListViewItemDelegate::UpdateItemSize(const int nNewItemCount)
+{
+    if (nNewItemCount > 20)
+    {
+        SetItemSize(QSize(100, 20));
+    }
+    else if (nNewItemCount < 8)
+    {
+        SetItemSize(QSize(100, 50));
+    }
+    else
+    {
+        int nHeight = 30 / (nNewItemCount - 8);
+        SetItemSize(QSize(100, nHeight + 20));
+    }
 }
 
 QString QListViewItemDelegate::GetMimeDataType() const
@@ -575,4 +599,19 @@ bool QListViewItemDelegate::IsHoverIndex(const QModelIndex& index) const
 void QListViewItemDelegate::onButtonClickedSlot(const QModelIndex& index)
 {
     qDebug() << index;
+}
+
+void QListViewItemDelegate::onItemInsertedSlot(const QModelIndex& parent, int first, int last)
+{
+    
+}
+
+void QListViewItemDelegate::onItemRemovedSlot(const QModelIndex& parent, int first, int last)
+{
+
+}
+
+void QListViewItemDelegate::onItemCountChanged(int nNewItemCount)
+{
+    UpdateItemSize(nNewItemCount);
 }

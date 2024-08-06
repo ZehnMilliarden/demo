@@ -8,8 +8,8 @@ QListWidgetLab::QListWidgetLab(QWidget* parent /*= nullptr*/)
 {
     QWidget::setObjectName("QListWidgetLab");
     CreateUI();
-    CreateData();
     CreateConnect();
+    CreateData();
 }
 
 QListWidgetLab::~QListWidgetLab()
@@ -42,16 +42,12 @@ void QListWidgetLab::CreateUI()
     m_pListView = new QListView(this);
     m_pMainLayout->addWidget(m_pListView);
 
-    updateButtonVisibility();
-}
-
-void QListWidgetLab::CreateData()
-{
     m_pDelegate = new QListViewItemDelegate(this);
     m_pListView->setItemDelegate(m_pDelegate);
     m_pListView->viewport()->setAttribute(Qt::WA_Hover);
     m_pListView->viewport()->setAttribute(Qt::WA_MouseTracking);
     m_pListView->viewport()->installEventFilter(m_pDelegate);
+
     m_pModel = new QListViewModel(this);
     m_pListView->setModel(m_pModel);
     m_pListView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -59,7 +55,12 @@ void QListWidgetLab::CreateData()
     m_pListView->setDragEnabled(true);
     m_pListView->setDragDropMode(QAbstractItemView::DragDrop);
 
-    addItemImpl(10);
+    updateButtonVisibility();
+}
+
+void QListWidgetLab::CreateData()
+{
+    addItemImpl(3);
 }
 
 void QListWidgetLab::CreateConnect()
@@ -70,6 +71,7 @@ void QListWidgetLab::CreateConnect()
     QObject::connect(m_pModel, &QListViewModel::rowsInserted, this, &QListWidgetLab::updateButtonVisibility);
     QObject::connect(m_pModel, &QListViewModel::rowsRemoved, this, &QListWidgetLab::updateButtonVisibility);
     QObject::connect(m_pListView->verticalScrollBar(), &QScrollBar::rangeChanged, this, &QListWidgetLab::updateButtonVisibility);
+    QObject::connect(this, &QListWidgetLab::onItemCountChangedSignal, m_pDelegate, &QListViewItemDelegate::onItemCountChanged);
 }
 
 void QListWidgetLab::updateButtonVisibility()
@@ -93,6 +95,8 @@ void QListWidgetLab::addItemImpl(int nCount)
                 QString::fromLocal8Bit("²âÊÔ°´Å¥ %1").arg(i + nCurrentCount));
         m_pModel->addItem(itemData);
     }
+
+    emit onItemCountChangedSignal(m_pModel->GetItemCount());
 }
 
 void QListWidgetLab::btnClicked(bool checked /*= false*/)

@@ -40,7 +40,7 @@ public:
     bool insertItem(int row, std::shared_ptr<QListItemData>& lstItem);
     void removeItem(int row);
     void swapItem(int nOrigalRow, int nTargetRow);
-    int  GetItemCount();
+    int  GetItemCount() const;
 
 protected: // QAbstractListModel
     int rowCount(const QModelIndex& parent) const override;

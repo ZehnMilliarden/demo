@@ -27,6 +27,11 @@ private:
 Q_SIGNALS:
     void buttonClicked(const QModelIndex& index);
 
+public Q_SLOTS:
+    void onItemInsertedSlot(const QModelIndex& parent, int first, int last);
+    void onItemRemovedSlot(const QModelIndex& parent, int first, int last);
+    void onItemCountChanged(int nNewItemCount);
+
 protected Q_SLOTS:
     void onButtonClickedSlot(const QModelIndex& index);
 
@@ -48,7 +53,9 @@ private:
     int GetOldHighLiteRow() const;
     void SetDraging(bool bVal);
     bool IsDraging() const;
-    QSize GetDefaultSize() const;
+    QSize GetItemSize() const;
+    void SetItemSize(const QSize& size);
+    void UpdateItemSize(const int nNewItemCount);
     QString GetMimeDataType() const;
     void SetHoverIndex(const QModelIndex& index);
     QModelIndex GetHoverIndex() const;
@@ -65,4 +72,5 @@ private:
     int m_nInsertRow = -1;
     int m_nSelectedRow = -1;
     bool m_bIsDraging = false;
+    QSize m_sizeItem = QSize(100, 50);
 };

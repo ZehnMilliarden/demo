@@ -47,14 +47,14 @@ void QListViewModel::swapItem(int nOrigalRow, int nTargetRow)
     endInsertRows();
 }
 
-int QListViewModel::GetItemCount()
+int QListViewModel::GetItemCount() const
 {
     return m_listData.size();
 }
 
 int QListViewModel::rowCount(const QModelIndex& parent) const
 {
-    return m_listData.size();
+    return GetItemCount();
 }
 
 QVariant QListViewModel::data(const QModelIndex& index, int role) const

@@ -30,6 +30,9 @@ protected Q_SLOTS:
     void btnClicked(bool checked = false);
     void updateButtonVisibility();
 
+Q_SIGNALS:
+    void onItemCountChangedSignal(int nNewItemCount);
+
 private:
     void addItemImpl(int nCount);
 
