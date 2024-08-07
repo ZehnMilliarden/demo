@@ -24,12 +24,13 @@ namespace QTabWidgetLabSpace
     void QTabWidgetLab::CreateUI()
     {
         m_pMainLayout = new QVBoxLayout(this);
-        m_pMainLayout->setContentsMargins(10, 10, 10, 10);
+        m_pMainLayout->setContentsMargins(0, 0, 0, 0);
         m_pMainLayout->setSpacing(10);
         setLayout(m_pMainLayout);
 
         m_pTabWidget = new QFakeTabWidget(this);
         m_pMainLayout->addWidget(m_pTabWidget);
+        m_pTabWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
         QWidget* pOptWidget = new QWidget(this);
         m_pMainLayout->addWidget(pOptWidget);
@@ -62,7 +63,7 @@ namespace QTabWidgetLabSpace
 
     void QTabWidgetLab::AddNewTab()
     {
-        for (int i = 0; i < 1000; ++i)
+        for (int i = 0; i < 10000; ++i)
         {
             m_pTabWidget->AddTab(QString::fromLocal8Bit("±êÇ© %1").arg(i));
         }
@@ -83,7 +84,15 @@ namespace QTabWidgetLabSpace
 
     void QFakeTabWidget::CreateUI()
     {
+        m_pMainLayout = new QVBoxLayout(this);
+        setLayout(m_pMainLayout);
         m_pTabBar = new QFakeTabBar(this);
+        m_pTabBar->setFixedHeight(35);
+        m_pMainLayout->addWidget(m_pTabBar);
+
+        m_pShowWidget = new QWidget(this);
+        m_pMainLayout->addWidget(m_pShowWidget);
+        m_pShowWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     }
 
     void QFakeTabWidget::CreateData()
@@ -151,6 +160,10 @@ namespace QTabWidgetLabSpace
     QFakeTabBar::QFakeTabBar(QWidget* parent)
         : QWidget(parent)
     {
+        RegisterMetaType();
+        CreateUI();
+        CreateConnect();
+        CreateData();
     }
 
     QFakeTabBar::~QFakeTabBar()
@@ -159,11 +172,64 @@ namespace QTabWidgetLabSpace
 
     void QFakeTabBar::addTab(const QString& strTitle)
     {
+        if (m_pModel)
+        {
+            std::shared_ptr<QListViewModel::QListItemData> itemData
+                = std::make_shared<QListViewModel::QListItemData>(
+                    QString::fromLocal8Bit(":/icon/res/icon/test.ico"),
+                    strTitle,
+                    QString::fromLocal8Bit("X"));
+            m_pModel->addItem(itemData);
+        }
+    }
+
+    void QFakeTabBar::currentChangedSlot(const QModelIndex& index)
+    {
+        emit currentChanged(index.row(), QLimitePrivateSignal());
+    }
+
+    void QFakeTabBar::tabCloseRequestedSlot(const QModelIndex& index)
+    {
+        emit tabCloseRequested(index.row(), QLimitePrivateSignal());
+    }
+
+    void QFakeTabBar::tabMovedSlot(const QModelIndex& from, const QModelIndex& to)
+    {
+        emit tabMoved(from.row(), to.row(), QLimitePrivateSignal());
+    }
+
+    void QFakeTabBar::RegisterMetaType()
+    {
+        qRegisterMetaType<QLimitePrivateSignal>("QLimitePrivateSignal");
     }
 
     void QFakeTabBar::CreateUI()
     {
+        m_pTabBarListLayout = new  QHBoxLayout(this);
+        setLayout(m_pTabBarListLayout);
+        m_pTabBarListLayout->setContentsMargins(0, 0, 0, 0);
 
+        m_pListView = new QListView(this);
+        m_pTabBarListLayout->addWidget(m_pListView);
+        m_pListView->setFlow(QListView::LeftToRight);
+        m_pListView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        m_pListView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        m_pListView->setAcceptDrops(true);
+        m_pListView->setDragEnabled(true);
+        m_pListView->setDragDropMode(QAbstractItemView::DragDrop);
+        m_pListView->viewport()->setAttribute(Qt::WA_Hover);
+        m_pListView->viewport()->setAttribute(Qt::WA_MouseTracking);
+        m_pListView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+        m_pOptWidget = new QWidget(this);
+        m_pTabBarListLayout->addWidget(m_pOptWidget);
+
+        m_pDelegate = new QListViewItemDelegate(this);
+        m_pListView->setItemDelegate(m_pDelegate);
+        m_pListView->viewport()->installEventFilter(m_pDelegate);
+
+        m_pModel = new QListViewModel(this);
+        m_pListView->setModel(m_pModel);
     }
 
     void QFakeTabBar::CreateData()
@@ -173,6 +239,8 @@ namespace QTabWidgetLabSpace
 
     void QFakeTabBar::CreateConnect()
     {
-
+        QObject::connect(m_pDelegate, &QListViewItemDelegate::onLineClicked, this, &QFakeTabBar::currentChangedSlot);
+        QObject::connect(m_pDelegate, &QListViewItemDelegate::buttonClicked, this, &QFakeTabBar::tabCloseRequestedSlot);
+        QObject::connect(m_pDelegate, &QListViewItemDelegate::onMoveItemTo, this, &QFakeTabBar::tabMovedSlot);
     }
 }

@@ -76,7 +76,7 @@ void QListViewItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem&
 
     // »æÖÆ°´Å¥
     QStyleOptionButton buttonOption;
-    buttonOption.rect = QRect(option.rect.right() - 120, option.rect.top(), 115, option.rect.height());
+    buttonOption.rect = QRect(option.rect.right() - 20, option.rect.top(), 20, option.rect.height());
     buttonOption.icon = QIcon(iconPath);
     buttonOption.text = btnText;
     buttonOption.state = QStyle::State_Enabled;
@@ -176,7 +176,7 @@ bool QListViewItemDelegate::eventFilter(QObject* pObject, QEvent* pEvent)
             QModelIndex index = pListView->indexAt(pMouseEvent->pos());
             QRect itemRect = pListView->visualRect(index);
 
-            QRect btnRect = QRect(itemRect.right() - 120, itemRect.top(), 115, itemRect.height());
+            QRect btnRect = QRect(itemRect.right() - 20, itemRect.top(), 20, itemRect.height());
 
             m_dragStartPos = QPoint();
 
@@ -263,7 +263,7 @@ bool QListViewItemDelegate::editorEvent(QEvent* pEvent, QAbstractItemModel* pMod
 {
     if (pEvent->type() == QEvent::MouseButtonPress) {
         QMouseEvent* mouseEvent = dynamic_cast<QMouseEvent*>(pEvent);
-        QRect buttonRect = QRect(option.rect.right() - 120, option.rect.top(), 115, option.rect.height());
+        QRect buttonRect = QRect(option.rect.right() - 20, option.rect.top(), 20, option.rect.height());
         if (buttonRect.contains(mouseEvent->pos())) {
             SetClickedIndex(index);
         }
@@ -271,9 +271,14 @@ bool QListViewItemDelegate::editorEvent(QEvent* pEvent, QAbstractItemModel* pMod
     else if (pEvent->type() == QEvent::MouseButtonRelease)
     {
         QMouseEvent* mouseEvent = dynamic_cast<QMouseEvent*>(pEvent);
-        QRect buttonRect = QRect(option.rect.right() - 120, option.rect.top(), 115, option.rect.height());
-        if (buttonRect.contains(mouseEvent->pos())) {
+        QRect buttonRect = QRect(option.rect.right() - 20, option.rect.top(), 20, option.rect.height());
+        if (buttonRect.contains(mouseEvent->pos())) 
+        {
             emit buttonClicked(index, QLimitePrivateSiganl());
+        }
+        else
+        {
+            emit onLineClicked(index, QLimitePrivateSiganl());
         }
         SetClickedIndex(QModelIndex());
     }
@@ -281,7 +286,7 @@ bool QListViewItemDelegate::editorEvent(QEvent* pEvent, QAbstractItemModel* pMod
         || pEvent->type() == QEvent::Leave)
     {
         QMouseEvent* mouseEvent = dynamic_cast<QMouseEvent*>(pEvent);
-        QRect buttonRect = QRect(option.rect.right() - 120, option.rect.top(), 115, option.rect.height());
+        QRect buttonRect = QRect(option.rect.right() - 20, option.rect.top(), 20, option.rect.height());
         if (buttonRect.contains(mouseEvent->pos())) {
             SetEventOnBtn(true);
         }
@@ -292,7 +297,7 @@ bool QListViewItemDelegate::editorEvent(QEvent* pEvent, QAbstractItemModel* pMod
     else if (pEvent->type() == QEvent::Wheel)
     {
         QWheelEvent* pWheelEvent = dynamic_cast<QWheelEvent*>(pEvent);
-        QRect buttonRect = QRect(option.rect.right() - 120, option.rect.top(), 115, option.rect.height());
+        QRect buttonRect = QRect(option.rect.right() - 20, option.rect.top(), 20, option.rect.height());
         if (buttonRect.contains(pWheelEvent->pos())) {
             SetEventOnBtn(true);
         }
@@ -303,7 +308,7 @@ bool QListViewItemDelegate::editorEvent(QEvent* pEvent, QAbstractItemModel* pMod
     else if (pEvent->type() == QEvent::Enter)
     {
         QEnterEvent* pEnterEvent = dynamic_cast<QEnterEvent*>(pEvent);
-        QRect buttonRect = QRect(option.rect.right() - 120, option.rect.top(), 115, option.rect.height());
+        QRect buttonRect = QRect(option.rect.right() - 20, option.rect.top(), 20, option.rect.height());
         if (buttonRect.contains(pEnterEvent->pos())) {
             SetEventOnBtn(true);
         }
@@ -568,6 +573,8 @@ void QListViewItemDelegate::onDropEvent(QDropEvent* pDropEvent, QListView* pList
     pListView->update(pListView->model()->index(GetOldHighLiteRow(), 0));
     pListView->update(pListView->model()->index(GetOldHighLiteRow() + 1, 0));
 
+    QModelIndex pressIndex = GetPressIndex();
+
     SetPressIndex(QModelIndex());
     SetClickedIndex(QModelIndex());
 
@@ -609,6 +616,7 @@ void QListViewItemDelegate::onDropEvent(QDropEvent* pDropEvent, QListView* pList
     pModel->insertItem(nInsertRow, pItemData);
     QModelIndex insertIndex = pModel->index(nInsertRow, 0);
     pListView->setCurrentIndex(insertIndex);
+    emit onMoveItemTo(pressIndex, insertIndex, QLimitePrivateSiganl());
     emit onItemSelected(insertIndex, pListView, QLimitePrivateSiganl());
     UpdateItemSize(pModel->GetItemCount());
 
@@ -678,16 +686,16 @@ void QListViewItemDelegate::UpdateItemSize(const int nNewItemCount)
 {
     if (nNewItemCount > 20)
     {
-        SetItemSize(QSize(100, 20));
+        SetItemSize(QSize(120, 20));
     }
     else if (nNewItemCount < 8)
     {
-        SetItemSize(QSize(100, 50));
+        SetItemSize(QSize(140, 20));
     }
     else
     {
-        int nHeight = 30 / (nNewItemCount - 8);
-        SetItemSize(QSize(100, nHeight + 20));
+        int nWidth = 20 / (nNewItemCount - 8);
+        SetItemSize(QSize(nWidth + 60, 20));
     }
 }
 

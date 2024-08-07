@@ -29,8 +29,10 @@ private:
 
 Q_SIGNALS:
     void buttonClicked(const QModelIndex& index, QLimitePrivateSiganl);
+    void onLineClicked(const QModelIndex& index, QLimitePrivateSiganl);
     void onItemSelected(const QModelIndex& index, QListView* pListView, QLimitePrivateSiganl);
-
+    void onMoveItemTo(const QModelIndex& from, const QModelIndex& to, QLimitePrivateSiganl);
+    
 public Q_SLOTS:
     void onItemInsertedSlot(const QModelIndex& parent, int first, int last);
     void onItemRemovedSlot(const QModelIndex& parent, int first, int last);

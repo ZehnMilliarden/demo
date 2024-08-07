@@ -14,6 +14,8 @@
 #include <QListView>
 
 #include "public/qt_demo/StyleWidget.h"
+#include "QListViewItemDelegate.h"
+#include "QListViewModel.h"
 
 namespace QTabWidgetLabSpace
 {
@@ -22,16 +24,24 @@ namespace QTabWidgetLabSpace
         Q_OBJECT;
         Q_DISABLE_COPY(QFakeTabBar);
 
+        class QLimitePrivateSignal{};
+
     public:
         explicit QFakeTabBar(QWidget* parent = nullptr);
         virtual ~QFakeTabBar();
 
     Q_SIGNALS:
-        void currentChanged(int nIndex);
-        void tabCloseRequested(int nIndex);
-        void tabMoved(int from, int to);
+        void currentChanged(int nIndex, QLimitePrivateSignal);
+        void tabCloseRequested(int nIndex, QLimitePrivateSignal);
+        void tabMoved(int from, int to, QLimitePrivateSignal);
+
+    private Q_SLOTS:
+        void currentChangedSlot(const QModelIndex& index);
+        void tabCloseRequestedSlot(const QModelIndex& index);
+        void tabMovedSlot(const QModelIndex& from, const QModelIndex& to);
 
     protected:
+        void RegisterMetaType();
         void CreateUI();
         void CreateData();
         void CreateConnect();
@@ -41,6 +51,11 @@ namespace QTabWidgetLabSpace
 
     private:
         QListView* m_pListView = nullptr;
+        QHBoxLayout* m_pTabBarListLayout = nullptr;
+        QWidget* m_pOptWidget = nullptr;
+
+        QListViewItemDelegate* m_pDelegate = nullptr;
+        QListViewModel* m_pModel = nullptr;
     };
 
     class QFakeTabWidget : public QWidget
@@ -69,6 +84,7 @@ namespace QTabWidgetLabSpace
         QFakeTabBar* m_pTabBar = nullptr;
         std::vector<QWidget*> m_vctWidgets;
         QWidget* m_pShowWidget = nullptr;
+        QVBoxLayout* m_pMainLayout = nullptr;
     };
 
     class QTabWidgetLab : public QWidget
