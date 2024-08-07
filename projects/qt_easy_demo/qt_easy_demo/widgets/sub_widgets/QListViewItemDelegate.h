@@ -7,6 +7,9 @@
 class QListViewItemDelegate : public QStyledItemDelegate
 {
     Q_OBJECT;
+private:
+    class QLimitePrivateSiganl {};
+
 public:
     explicit QListViewItemDelegate(QObject* parent = nullptr);
     virtual ~QListViewItemDelegate();
@@ -25,7 +28,8 @@ private:
     void paintDrag(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
 
 Q_SIGNALS:
-    void buttonClicked(const QModelIndex& index);
+    void buttonClicked(const QModelIndex& index, QLimitePrivateSiganl);
+    void onItemSelected(const QModelIndex& index, QListView* pListView, QLimitePrivateSiganl);
 
 public Q_SLOTS:
     void onItemInsertedSlot(const QModelIndex& parent, int first, int last);
@@ -34,6 +38,9 @@ public Q_SLOTS:
 
 protected Q_SLOTS:
     void onButtonClickedSlot(const QModelIndex& index);
+
+protected Q_SLOTS:
+    void onUpdateSelectedRowSlot(const QModelIndex& index, QListView* pListView);
 
 private:
     void onHoverMove(QMouseEvent* pMouseEvent, QListView* pListView);
