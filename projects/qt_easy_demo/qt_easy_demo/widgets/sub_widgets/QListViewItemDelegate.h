@@ -65,10 +65,15 @@ private:
     bool IsPressIndex(const QModelIndex& index) const;
     void SetEventOnBtn(const bool bVal);
     bool IsEventOnBtn() const;
+    bool IsDragStartNull() const;
+    void SetClickedIndex(const QModelIndex& index);
+    QModelIndex GetClickedIndex() const;
+    bool IsClickedIndex(const QModelIndex& index) const;
 
 private:
     QModelIndex m_hoveredIndex;
     QModelIndex m_pressedIndex;
+    QModelIndex m_clickedIndex;
 
     QPushButton* m_pButtonTemplate = nullptr;
     QPoint m_dragStartPos;
