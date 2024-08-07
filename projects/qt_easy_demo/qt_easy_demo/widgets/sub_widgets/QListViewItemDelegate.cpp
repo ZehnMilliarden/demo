@@ -29,6 +29,23 @@ QListViewItemDelegate::~QListViewItemDelegate()
 void QListViewItemDelegate::CreateData()
 {
     m_pButtonTemplate = new QPushButton;
+    m_pButtonTemplate->setStyleSheet(
+        "QPushButton {"
+        "    background-color: lightgray;" // ÆÕÍ¨×´Ì¬
+        "    color: black;"
+        "    border: 2px solid black;"
+        "    border-radius: 5px;"
+        "    padding: 5px;"
+        "}"
+        "QPushButton:hover {"
+        "    background-color: lightblue;" // ÐüÍ£×´Ì¬
+        "    color: white;"
+        "}"
+        "QPushButton:pressed {"
+        "    background-color: lightgreen;" // °´ÏÂ×´Ì¬
+        "    color: darkgreen;"
+        "}"
+    );
 }
 
 void QListViewItemDelegate::CreateConnection()
@@ -60,13 +77,29 @@ void QListViewItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem&
     buttonOption.text = btnText;
     buttonOption.state = QStyle::State_Enabled;
 
+    // ¼ì²éÊó±ê×´Ì¬
+    if (IsEventOnBtn())
+    {
+        if (IsPressIndex(index))
+        {
+            buttonOption.state |= QStyle::State_Sunken;
+        }
+        
+        if (IsHoverIndex(index))
+        {
+            buttonOption.state |= QStyle::State_On;
+        }
+    }
+
+    qDebug() << "State: " << option.state;
+
     // Ê¹ÓÃÒþ²Ø°´Å¥µÄÑùÊ½»æÖÆÐéÄâ°´Å¥
     QApplication::style()->drawControl(QStyle::CE_PushButton, &buttonOption, painter, m_pButtonTemplate);
 
     if (IsHoverIndex(index))
     {
         painter->setPen(Qt::NoPen);
-        painter->setBrush(QColor(255, 0, 0, 50));  // ºìÉ«°ëÍ¸Ã÷±³¾°
+        //painter->setBrush(QColor(255, 0, 0, 50));  // ºìÉ«°ëÍ¸Ã÷±³¾°
         painter->drawRect(option.rect);
     }
 
@@ -115,7 +148,6 @@ bool QListViewItemDelegate::eventFilter(QObject* pObject, QEvent* pEvent)
         if (pMouseEvent && pListView)
         {
             SetSelectRow(pListView->currentIndex().row());
-
             if (pMouseEvent->buttons() & Qt::LeftButton)
             {
                 onDragMouseMove(pMouseEvent, pListView);
@@ -139,6 +171,8 @@ bool QListViewItemDelegate::eventFilter(QObject* pObject, QEvent* pEvent)
             }
 
             QModelIndex index = pListView->indexAt(pMouseEvent->pos());
+            SetPressIndex(index);
+            pListView->viewport()->update();
         }
     }
     else if (pEvent->type() == QEvent::MouseButtonRelease)
@@ -149,6 +183,8 @@ bool QListViewItemDelegate::eventFilter(QObject* pObject, QEvent* pEvent)
             QMouseEvent* pMouseEvent = dynamic_cast<QMouseEvent*>(pEvent);
             QModelIndex index = pListView->indexAt(pMouseEvent->pos());
             pListView->setCurrentIndex(index);
+            SetPressIndex(QModelIndex());
+            pListView->viewport()->update();
         }
     }
     else if (pEvent->type() == QEvent::DragEnter)
@@ -201,12 +237,59 @@ bool QListViewItemDelegate::editorEvent(QEvent* pEvent, QAbstractItemModel* pMod
     if (pEvent->type() == QEvent::MouseButtonPress) {
         QMouseEvent* mouseEvent = dynamic_cast<QMouseEvent*>(pEvent);
         QRect buttonRect = QRect(option.rect.right() - 120, option.rect.top(), 75, option.rect.height());
-
         if (buttonRect.contains(mouseEvent->pos())) {
             emit buttonClicked(index);
-            return true;
         }
     }
+    else if (pEvent->type() == QEvent::MouseButtonRelease)
+    {
+    }
+    else if (pEvent->type() == QEvent::MouseMove 
+        || pEvent->type() == QEvent::Leave)
+    {
+        QMouseEvent* mouseEvent = dynamic_cast<QMouseEvent*>(pEvent);
+        QRect buttonRect = QRect(option.rect.right() - 120, option.rect.top(), 75, option.rect.height());
+        if (buttonRect.contains(mouseEvent->pos())) {
+            SetEventOnBtn(true);
+        }
+        else {
+            SetEventOnBtn(false);
+        }
+    }
+    else if (pEvent->type() == QEvent::Wheel)
+    {
+        QWheelEvent* pWheelEvent = dynamic_cast<QWheelEvent*>(pEvent);
+        QRect buttonRect = QRect(option.rect.right() - 120, option.rect.top(), 75, option.rect.height());
+        if (buttonRect.contains(pWheelEvent->pos())) {
+            SetEventOnBtn(true);
+        }
+        else {
+            SetEventOnBtn(false);
+        }
+    }
+    else if (pEvent->type() == QEvent::Enter)
+    {
+        QEnterEvent* pEnterEvent = dynamic_cast<QEnterEvent*>(pEvent);
+        QRect buttonRect = QRect(option.rect.right() - 120, option.rect.top(), 75, option.rect.height());
+        if (buttonRect.contains(pEnterEvent->pos())) {
+            SetEventOnBtn(true);
+        }
+        else {
+            SetEventOnBtn(false);
+        }
+    }
+    else if (pEvent->type() == QEvent::Enter)
+    {
+        QEnterEvent* pEnterEvent = dynamic_cast<QEnterEvent*>(pEvent);
+        QRect buttonRect = QRect(option.rect.right() - 120, option.rect.top(), 75, option.rect.height());
+        if (buttonRect.contains(pEnterEvent->pos())) {
+            SetEventOnBtn(true);
+        }
+        else {
+            SetEventOnBtn(false);
+        }
+    }
+
     return QStyledItemDelegate::editorEvent(pEvent, pModel, option, index);
 }
 
@@ -358,11 +441,8 @@ void QListViewItemDelegate::paintDrag(QPainter* painter, const QStyleOptionViewI
 void QListViewItemDelegate::onHoverMove(QMouseEvent* pMouseEvent, QListView* pListView)
 {
     QModelIndex index = pListView->indexAt(pMouseEvent->pos());
-    if (!IsHoverIndex(index))
-    {
-        SetHoverIndex(index);
-        pListView->viewport()->update();
-    }
+    SetHoverIndex(index);
+    pListView->viewport()->update();
 }
 
 void QListViewItemDelegate::onDragMouseMove(QMouseEvent* pMouseEvent, QListView* pListView)
@@ -593,7 +673,34 @@ QModelIndex QListViewItemDelegate::GetHoverIndex() const
 
 bool QListViewItemDelegate::IsHoverIndex(const QModelIndex& index) const
 {
-    return m_hoveredIndex == index;
+    bool bRet = m_hoveredIndex.isValid() && m_hoveredIndex == index;
+    return bRet;
+}
+
+void QListViewItemDelegate::SetPressIndex(const QModelIndex& index)
+{
+    m_pressedIndex = index;
+}
+
+QModelIndex QListViewItemDelegate::GetPressIndex() const
+{
+    return m_pressedIndex;
+}
+
+bool QListViewItemDelegate::IsPressIndex(const QModelIndex& index) const
+{
+    bool bRet = m_pressedIndex.isValid() && m_pressedIndex == index;
+    return bRet;
+}
+
+void QListViewItemDelegate::SetEventOnBtn(const bool bVal)
+{
+    m_bIsEventOnBtn = bVal;
+}
+
+bool QListViewItemDelegate::IsEventOnBtn() const
+{
+    return m_bIsEventOnBtn;
 }
 
 void QListViewItemDelegate::onButtonClickedSlot(const QModelIndex& index)

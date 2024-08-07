@@ -60,9 +60,16 @@ private:
     void SetHoverIndex(const QModelIndex& index);
     QModelIndex GetHoverIndex() const;
     bool IsHoverIndex(const QModelIndex& index) const;
+    void SetPressIndex(const QModelIndex& index);
+    QModelIndex GetPressIndex() const;
+    bool IsPressIndex(const QModelIndex& index) const;
+    void SetEventOnBtn(const bool bVal);
+    bool IsEventOnBtn() const;
 
 private:
     QModelIndex m_hoveredIndex;
+    QModelIndex m_pressedIndex;
+
     QPushButton* m_pButtonTemplate = nullptr;
     QPoint m_dragStartPos;
     int m_nDragIndex = -1;  // -1: not drag
@@ -73,4 +80,6 @@ private:
     int m_nSelectedRow = -1;
     bool m_bIsDraging = false;
     QSize m_sizeItem = QSize(100, 50);
+
+    bool m_bIsEventOnBtn = false;
 };
