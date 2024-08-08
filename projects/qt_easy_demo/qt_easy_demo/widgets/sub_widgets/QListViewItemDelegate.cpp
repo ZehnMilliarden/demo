@@ -324,11 +324,28 @@ void QListViewItemDelegate::paintDrag(QPainter* painter, const QStyleOptionViewI
 {
     QListView* dragView = qobject_cast<QListView*>(option.styleObject);
     QModelIndex currentIndex = dragView->currentIndex();
+
+    if (dragView->flow() == QListView::LeftToRight)
+    {
+        paintDragLeftToRight(painter, option, index);
+    }
+    else
+    {
+        paintDragTopToBottom(painter, option, index);
+    }
+
+    return;
+}
+
+void QListViewItemDelegate::paintDragTopToBottom(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
+{
+    QListView* dragView = qobject_cast<QListView*>(option.styleObject);
+    int rowCount = dragView->model()->rowCount() - 1;
     int theDragRow = GetDragRow();
     int theSelectedRow = GetSelectRow();
     int UpRow = GetHighLiteRow();
     int DownRow = UpRow + 1;
-    int rowCount = dragView->model()->rowCount() - 1;
+
     QRect rect = option.rect;
 
     const int nPOLYGON = 4;
@@ -351,7 +368,6 @@ void QListViewItemDelegate::paintDrag(QPainter* painter, const QStyleOptionViewI
             painter->setBrush(QColor(245, 245, 247));
             painter->drawPolygon(trianglePolygon_bottomLeft);
             painter->drawPolygon(trianglePolygon_bottomRight);
-            painter->drawRect(rect.bottomLeft().x(), rect.bottomLeft().y() - (offset + nWIDTH) + 1, rect.width(), offset + nWIDTH);
             painter->drawRect(rect.bottomLeft().x(), rect.bottomLeft().y() - (offset + nWIDTH) + 1, rect.width(), offset + nWIDTH);
         }
         else if (index.row() == DownRow && index.row() != theDragRow + 1) {
@@ -447,22 +463,25 @@ void QListViewItemDelegate::paintDrag(QPainter* painter, const QStyleOptionViewI
             painter->drawPolygon(trianglePolygon_topRight);
         }
     }
+}
 
-    //if (currentIndex == index && !IsDragStartNull())
-    if (false)
-    {
-        painter->setBrush(QColor(180, 0, 0));
-        painter->drawRect(rect.topLeft().x(), rect.topLeft().y(), 4, rect.height());
+void QListViewItemDelegate::paintDragLeftToRight(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
+{
+    QListView* dragView = qobject_cast<QListView*>(option.styleObject);
+    int rowCount = dragView->model()->rowCount() - 1;
+    int theDragRow = GetDragRow();
+    int theSelectedRow = GetSelectRow();
+    int UpRow = GetHighLiteRow();
+    int DownRow = UpRow + 1;
 
-        painter->setBrush(QColor(230, 231, 234));
-        painter->drawRect(rect.topLeft().x() + 4, rect.topLeft().y(), rect.width() - 4, rect.height());
+    if (index.row() == theDragRow) {
+        QColor backgroundColor = option.backgroundBrush.color();
+        backgroundColor.setAlpha(100); // 设置透明度值，可以根据需要调整
 
-        QStyleOptionViewItem opt(option);
-        opt.state |= QStyle::State_Selected;
-        QStyledItemDelegate::paint(painter, opt, index);
+        // 绘制背景
+        painter->fillRect(option.rect, backgroundColor);
+        painter->drawRect(option.rect);
     }
-
-    return;
 }
 
 void QListViewItemDelegate::onHoverMove(QMouseEvent* pMouseEvent, QListView* pListView)
@@ -478,7 +497,7 @@ void QListViewItemDelegate::onHoverMove(QMouseEvent* pMouseEvent, QListView* pLi
 void QListViewItemDelegate::onDragMouseMove(QMouseEvent* pMouseEvent, QListView* pListView)
 {
     QModelIndex theDragIndex = pListView->indexAt(m_dragStartPos);
-    m_nDragIndex = theDragIndex.row();
+    SetDragRow(theDragIndex.row());
     QString strIconPath = theDragIndex.data(Qt::UserRole + 1).toString();
     QString strTitleText = theDragIndex.data(Qt::UserRole + 2).toString();
     QString strBtnText = theDragIndex.data(Qt::UserRole + 3).toString();
@@ -503,8 +522,8 @@ void QListViewItemDelegate::onDragMouseMove(QMouseEvent* pMouseEvent, QListView*
     if (emDropAction == Qt::MoveAction)
     {
         int theRemoveRow = -1;
-        if (m_nInsertIndex < m_nDragIndex) theRemoveRow = m_nDragIndex + 1;
-        else theRemoveRow = m_nDragIndex;
+        if (m_nInsertIndex < m_nDragIndex) theRemoveRow = GetDragRow() + 1;
+        else theRemoveRow = GetDragRow();
         pListView->model()->removeRow(theRemoveRow);
     }
 }
@@ -531,11 +550,23 @@ void QListViewItemDelegate::onDragLeave(QDragLeaveEvent* pDragLeaveEvent, QListV
 
 void QListViewItemDelegate::onDragMove(QDragMoveEvent* pDragMoveEvent, QListView* pListView)
 {
-    int nOffset =GetItemSize().height() / 2 - 1;
-    SetHighLiteRow(pListView->indexAt(pDragMoveEvent->pos() - QPoint(0, nOffset)).row());
+    int nOffset = 0;
+    int nPoxy = 0;
+    
+    if (pListView->flow() == QListView::LeftToRight)
+    {
+        GetItemSize().width() / 2 - 1;
+        SetHighLiteRow(pListView->indexAt(pDragMoveEvent->pos() - QPoint(nOffset, 0)).row());
+        nPoxy = pDragMoveEvent->pos().x();
+    }
+    else
+    {
+        GetItemSize().height() / 2 - 1;
+        SetHighLiteRow(pListView->indexAt(pDragMoveEvent->pos() - QPoint(0, nOffset)).row());
+        nPoxy = pDragMoveEvent->pos().y();
+    }
 
-    //offset() = 19 = 40 / 2 - 1，其中40是行高
-    if (pDragMoveEvent->pos().y() >= nOffset) {
+    if (nPoxy >= nOffset) {
 
         if (m_nOldHighlightedRow != m_nHighlightedRow) {
             //刷新旧区域使dropIndicator消失
@@ -598,13 +629,13 @@ void QListViewItemDelegate::onDropEvent(QDropEvent* pDropEvent, QListView* pList
             text,
             btnText);
 
-    if (m_nDragIndex != -1)
+    if (GetDragRow() != -1)
     {
-        pModel->removeItem(m_nDragIndex);
+        pModel->removeItem(GetDragRow());
     }
 
     int nInsertRow = -1;
-    if (m_nDragIndex > m_nInsertRow)
+    if (GetDragRow() > m_nInsertRow)
     {
         nInsertRow = m_nInsertRow;
     }

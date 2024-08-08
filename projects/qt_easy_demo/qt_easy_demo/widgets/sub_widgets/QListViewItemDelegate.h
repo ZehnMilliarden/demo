@@ -26,6 +26,8 @@ protected: // QStyledItemDelegate
 
 private:
     void paintDrag(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
+    void paintDragTopToBottom(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
+    void paintDragLeftToRight(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
 
 Q_SIGNALS:
     void buttonClicked(const QModelIndex& index, QLimitePrivateSiganl);
