@@ -99,6 +99,8 @@
     <ClCompile Include="widgets\main_widgets\QMainRightWidget.cpp" />
     <ClCompile Include="widgets\main_widgets\QMainWidget.cpp" />
     <ClCompile Include="widgets\sub_widgets\QDragThumbnail.cpp" />
+    <ClCompile Include="widgets\sub_widgets\QFakeTabBar.cpp" />
+    <ClCompile Include="widgets\sub_widgets\QFakeTabWidget.cpp" />
     <ClCompile Include="widgets\sub_widgets\QListViewItemDelegate.cpp" />
     <ClCompile Include="widgets\sub_widgets\QListViewModel.cpp" />
     <ClCompile Include="widgets\sub_widgets\QListWidgetLab.cpp" />
@@ -136,6 +138,8 @@
     <QtMoc Include="widgets\sub_widgets\QListViewItemDelegate.h" />
     <QtMoc Include="widgets\sub_widgets\QListViewModel.h" />
     <QtMoc Include="widgets\sub_widgets\QDragThumbnail.h" />
+    <QtMoc Include="widgets\sub_widgets\QFakeTabBar.h" />
+    <QtMoc Include="widgets\sub_widgets\QFakeTabWidget.h" />
     <ClInclude Include="widgets\sub_widgets\QSubWidgetsList.h" />
     <QtMoc Include="widgets\sub_widgets\QRedDotWidgetLab.h" />
     <QtMoc Include="widgets\sub_widgets\QListWidgetLab.h" />

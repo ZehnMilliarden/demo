@@ -36,9 +36,10 @@ public:
     virtual ~QListViewModel();
 
 public:
-    void addItem(std::shared_ptr<QListItemData>& lstItem);
-    bool insertItem(int row, std::shared_ptr<QListItemData>& lstItem);
+    bool insertItem(int row, std::shared_ptr<QListItemData>& pItem);
+    bool insertItems(int row, const std::vector<std::shared_ptr<QListItemData>>& lstItems);
     void removeItem(int row);
+    void removeItems(int row, int nCount);
     void swapItem(int nOrigalRow, int nTargetRow);
     int  GetItemCount() const;
 

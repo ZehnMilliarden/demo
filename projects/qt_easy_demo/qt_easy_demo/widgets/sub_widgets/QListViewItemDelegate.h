@@ -42,8 +42,6 @@ public Q_SLOTS:
 
 protected Q_SLOTS:
     void onButtonClickedSlot(const QModelIndex& index);
-
-protected Q_SLOTS:
     void onUpdateSelectedRowSlot(const QModelIndex& index, QListView* pListView);
 
 private:

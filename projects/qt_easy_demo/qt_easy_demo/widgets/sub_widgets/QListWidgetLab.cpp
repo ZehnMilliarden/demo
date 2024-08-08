@@ -93,7 +93,7 @@ void QListWidgetLab::addItemImpl(int nCount)
                 QString::fromLocal8Bit(":/icon/res/icon/test.ico"),
                 QString::fromLocal8Bit("²âÊÔÎÄ°¸ %1").arg(i + nCurrentCount),
                 QString::fromLocal8Bit("²âÊÔ°´Å¥ %1").arg(i + nCurrentCount));
-        m_pModel->addItem(itemData);
+        m_pModel->insertItem(-1, itemData);
     }
 
     emit onItemCountChangedSignal(m_pModel->GetItemCount());

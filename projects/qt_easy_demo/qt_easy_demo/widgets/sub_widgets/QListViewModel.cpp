@@ -9,19 +9,37 @@ QListViewModel::~QListViewModel()
 {
 }
 
-void QListViewModel::addItem(std::shared_ptr<QListItemData>& lstItem)
-{
-    beginInsertRows(QModelIndex(), m_listData.size(), m_listData.size());
-    m_listData.push_back(lstItem);
-    endInsertRows();
-}
 
-bool QListViewModel::insertItem(int row, std::shared_ptr<QListItemData>& lstItem)
+bool QListViewModel::insertItems(int row, const std::vector<std::shared_ptr<QListItemData>>& lstItems)
 {
     beginInsertRows(QModelIndex(), m_listData.size(), m_listData.size());
     std::list<std::shared_ptr<QListItemData>>::iterator iter = m_listData.begin();
-    std::advance(iter, row);
-    m_listData.insert(iter, lstItem);
+    if (row != -1)
+    {
+        std::advance(iter, row);
+    }
+    else
+    {
+        iter = m_listData.end();
+    }
+    m_listData.insert(iter, lstItems.begin(), lstItems.end());
+    endInsertRows();
+    return true;
+}
+
+bool QListViewModel::insertItem(int row, std::shared_ptr<QListItemData>& pItem)
+{
+    beginInsertRows(QModelIndex(), m_listData.size(), m_listData.size());
+    std::list<std::shared_ptr<QListItemData>>::iterator iter = m_listData.begin();
+    if (row != -1)
+    {
+        std::advance(iter, row);
+    }
+    else
+    {
+        iter = m_listData.end();
+    }
+    m_listData.insert(iter, pItem);
     endInsertRows();
     return false;
 }
@@ -35,6 +53,17 @@ void QListViewModel::removeItem(int row)
     {
         m_listData.erase(iter);
     }
+    endInsertRows();
+}
+
+void QListViewModel::removeItems(int row, int nCount)
+{
+    beginInsertRows(QModelIndex(), m_listData.size(), m_listData.size());
+    std::list<std::shared_ptr<QListItemData>>::iterator iterBegin = m_listData.begin();
+    std::advance(iterBegin, row);
+    std::list<std::shared_ptr<QListItemData>>::iterator iterEnd = iterBegin;
+    std::advance(iterEnd, nCount);
+    m_listData.erase(iterBegin, iterEnd);
     endInsertRows();
 }
 

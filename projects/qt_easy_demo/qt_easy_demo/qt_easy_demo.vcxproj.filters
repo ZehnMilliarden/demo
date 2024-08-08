@@ -86,6 +86,12 @@
     <ClCompile Include="widgets\sub_widgets\QDragThumbnail.cpp">
       <Filter>widgets\sub_widgets</Filter>
     </ClCompile>
+    <ClCompile Include="widgets\sub_widgets\QFakeTabBar.cpp">
+      <Filter>widgets\sub_widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\sub_widgets\QFakeTabWidget.cpp">
+      <Filter>widgets\sub_widgets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="widgets\main_widgets\QMainWidget.h">
@@ -125,6 +131,12 @@
       <Filter>widgets\sub_widgets</Filter>
     </QtMoc>
     <QtMoc Include="widgets\sub_widgets\QDragThumbnail.h">
+      <Filter>widgets\sub_widgets</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\sub_widgets\QFakeTabWidget.h">
+      <Filter>widgets\sub_widgets</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\sub_widgets\QFakeTabBar.h">
       <Filter>widgets\sub_widgets</Filter>
     </QtMoc>
   </ItemGroup>

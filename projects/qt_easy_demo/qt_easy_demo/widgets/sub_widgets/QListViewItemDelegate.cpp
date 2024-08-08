@@ -803,7 +803,7 @@ void QListViewItemDelegate::onButtonClickedSlot(const QModelIndex& index)
     qDebug() << "btn : " << index << " is clicked";
 }
 
-void QListViewItemDelegate::onUpdateSelectedRowSlot(const QModelIndex& index, QListView* const pListView)
+void QListViewItemDelegate::onUpdateSelectedRowSlot(const QModelIndex& index, QListView* pListView)
 {
     if (pListView)
     {
