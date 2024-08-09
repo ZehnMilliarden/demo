@@ -3,6 +3,7 @@
 #include <QStyledItemDelegate>
 #include <QPushButton>
 #include <QListView>
+#include <functional>
 
 class QListViewItemDelegate : public QStyledItemDelegate
 {
@@ -61,12 +62,13 @@ private:
     void SetSelectRow(int nRow);
     void SetHighLiteRow(int nRow);
     void SetDraging(bool bVal);
-    void SetItemSize(const QSize& size);
-    void UpdateItemSize(const int nNewItemCount);
     void SetHoverIndex(const QModelIndex& index);
     void SetPressIndex(const QModelIndex& index);
     void SetEventOnBtn(const bool bVal);
     void SetClickedIndex(const QModelIndex& index);
+
+public:
+    void SetSizeHintFunc(const std::function<QSize(const QStyleOptionViewItem& option, const QModelIndex& index)>& func);
 
 public:
     QModelIndex GetClickedIndex() const;
@@ -74,12 +76,12 @@ public:
     bool IsEventOnBtn() const;
     bool IsDragStartNull() const;
     QModelIndex GetPressIndex() const;
+    bool IsHoverIndexInBtn(const QModelIndex& index) const;
     bool IsPressIndex(const QModelIndex& index) const;
     QModelIndex GetHoverIndex() const;
     bool IsHoverIndex(const QModelIndex& index) const;
     QString GetMimeDataType() const;
     bool IsDraging() const;
-    QSize GetItemSize() const;
     int GetDragRow() const;
     int GetHighLiteRow() const;
     int GetOldHighLiteRow() const;
@@ -99,7 +101,6 @@ private:
     int m_nInsertRow = -1;
     int m_nSelectedRow = -1;
     bool m_bIsDraging = false;
-    QSize m_sizeItem = QSize(100, 50);
-
     bool m_bIsEventOnBtn = false;
+    std::function<QSize(const QStyleOptionViewItem& option, const QModelIndex& index)> m_funcSizeHint = nullptr;
 };

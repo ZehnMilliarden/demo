@@ -108,6 +108,9 @@ void QListViewModel::updateData(const QModelIndex& index, int role, const QVaria
     case Qt::UserRole + 4:
         (*it)->SetToolTipText(data.toString());
         break;
+    case Qt::UserRole+5:
+        (*it)->SetVarData(data);
+        break;
     default:
         break;
     }
@@ -141,6 +144,8 @@ QVariant QListViewModel::data(const QModelIndex& index, int role) const
         return (*it)->GetBtnText();
     case Qt::UserRole + 4:
         return (*it)->GetToolTipText();
+    case Qt::UserRole + 5:
+        return (*it)->GetVarData();
     default:
         return QVariant();
     }

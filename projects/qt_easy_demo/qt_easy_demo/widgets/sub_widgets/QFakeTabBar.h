@@ -12,6 +12,7 @@ class QFakeTabBar : public QWidget
     Q_OBJECT;
     Q_DISABLE_COPY(QFakeTabBar);
 
+protected:
     class QLimitePrivateSignal {};
 
 public:
@@ -39,16 +40,25 @@ protected:
     void CreateData();
     void CreateConnect();
 
-
 public:
     void addTab(const QString& strTitle);
     void addTab(const QString& strTitle, int nOffset);
     void addTabs(std::vector<QString>& vctTitle);
     void addTabs(std::vector<QString>& vctTitle, int nOffset);
-    int  GetTabCount();
+    int  GetTabCount() const;
     bool SetCurrentIndex(int index);
+    int  GetCurrentIndex() const;
+    QRect tabRect(int index) const;
+    int count() const;
+    QVariant tabData(int index) const;
+    void setTabData(int index, QVariant qVar);
+    int tabAt(const QPoint& point) const;
+    void removeTab(int index);
     void SetBtnCloseTipText(const QString& strText);
     void SetTabToolTipText(int nIndex, const QString& strText);
+
+public:
+    virtual QSize tabSizeHint(int index) const;
 
 private:
     QListView* m_pListView = nullptr;

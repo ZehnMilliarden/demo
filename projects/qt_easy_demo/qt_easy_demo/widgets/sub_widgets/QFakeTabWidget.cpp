@@ -5,6 +5,17 @@
 QFakeTabWidget::QFakeTabWidget(QWidget* parent)
     : QWidget(parent)
 {
+    RegisterMetaType();
+    CreateUI();
+    CreateData();
+    CreateConnect();
+}
+
+QFakeTabWidget::QFakeTabWidget(QFakeTabBar* pTabBar, QWidget* parent) 
+    : QWidget(parent) 
+    , m_pTabBar(pTabBar)
+{
+    RegisterMetaType();
     CreateUI();
     CreateData();
     CreateConnect();
@@ -14,12 +25,19 @@ QFakeTabWidget::~QFakeTabWidget()
 {
 }
 
+void QFakeTabWidget::RegisterMetaType() {
+    qRegisterMetaType<QLimitePrivateSignal>("QFakeTabWidget::QLimitePrivateSignal");
+}
+
 void QFakeTabWidget::CreateUI()
 {
     m_pMainLayout = new QVBoxLayout(this);
     setLayout(m_pMainLayout);
-    m_pTabBar = new QFakeTabBar(this);
-    m_pTabBar->setFixedHeight(35);
+    if (!m_pTabBar)
+    {
+        m_pTabBar = new QFakeTabBar(this);
+        m_pTabBar->setFixedHeight(35);
+    }
     m_pMainLayout->addWidget(m_pTabBar);
 
     m_pShowWidget = new QWidget(this);
@@ -32,7 +50,6 @@ void QFakeTabWidget::CreateUI()
 
 void QFakeTabWidget::CreateData()
 {
-    m_vctWidgets.resize(100000);
 }
 
 void QFakeTabWidget::CreateConnect()
@@ -65,6 +82,38 @@ void QFakeTabWidget::SetCurrentIndex(int index)
     }
 }
 
+int QFakeTabWidget::GetCurrentIndex() const {
+    if (m_pTabBar)
+    {
+        return m_pTabBar->GetCurrentIndex();
+    }
+
+    return -1;
+}
+
+QWidget* QFakeTabWidget::GetCurrentWidget() const {
+
+    int nIndex = GetCurrentIndex();
+    if (nIndex >= 0)
+    {
+        return m_vctWidgets[nIndex];
+    }
+
+    return nullptr;
+}
+
+void QFakeTabWidget::RemoveTab(int index) {
+    if (m_pTabBar) {
+        m_pTabBar->removeTab(index);
+    }
+
+    if (m_funcWidgetDestroy) {
+        m_funcWidgetDestroy(index, m_vctWidgets[index]);
+    }
+
+    m_vctWidgets.erase(m_vctWidgets.begin() + index);
+}
+
 void QFakeTabWidget::currentChangedSlot(int index)
 {
     if (m_vctWidgets.size() <= index)
@@ -72,34 +121,19 @@ void QFakeTabWidget::currentChangedSlot(int index)
         m_vctWidgets.resize(index);
     }
 
-    std::vector<QWidget*>::iterator iter = m_vctWidgets.begin();
-    std::advance(iter, index);
-
     ClearMainLayout();
 
-    QWidget*& pTargetWidget = *iter;
-    if (!pTargetWidget)
+    QWidget* pWidget = widget(index);
+    if (pWidget)
     {
-        
-        pTargetWidget = new QWidget(this);
-        QVBoxLayout* pLayout = new QVBoxLayout(pTargetWidget);
-        pTargetWidget->setLayout(pLayout);
-        QLabel* pName = new QLabel(pTargetWidget);
-        pName->setText(QString::fromLocal8Bit("%1").arg(index));
+        pWidget->show();
+        m_pShowLayout->addWidget(pWidget);
     }
-
-    pTargetWidget->show();
-    m_pShowLayout->addWidget(pTargetWidget);
 }
 
 void QFakeTabWidget::tabCloseRequestedSlot(int index)
 {
-    std::vector<QWidget*>::iterator iter = m_vctWidgets.begin();
-    std::advance(iter, index);
-    QWidget*& pTargetWidget = *iter;
-    pTargetWidget->deleteLater();
-    pTargetWidget = NULL;
-    m_vctWidgets.erase(iter);
+    emit tabCloseRequested(index, QLimitePrivateSignal());
 }
 
 void QFakeTabWidget::tabMovedSlot(int from, int to)
@@ -117,9 +151,33 @@ void QFakeTabWidget::ClearMainLayout()
 {
     while (QLayoutItem* item = m_pShowLayout->takeAt(0)) {
         if (QWidget* widget = item->widget()) {
-            widget->hide(); // 隐藏小部件
-            //widget->deleteLater();
+            widget->hide();
         }
-        delete item; // 删除布局项
+        delete item;
     }
+}
+
+QFakeTabBar* QFakeTabWidget::tabBar() const {
+    return m_pTabBar;
+}
+
+int QFakeTabWidget::count() const {
+    return m_pTabBar->count();
+}
+
+void QFakeTabWidget::setWidgetCreater(std::function<QWidget* (int index)> func) {
+    m_funcWidgetCreater = func;
+}
+
+void QFakeTabWidget::setWidgetDestroy(std::function<bool(int index, QWidget*)> func) {
+    m_funcWidgetDestroy = func;
+}
+
+QWidget* QFakeTabWidget::widget(int index) {
+    if (!m_vctWidgets[index]) {
+        if (m_funcWidgetCreater) {
+            m_vctWidgets[index] = m_funcWidgetCreater(index);
+        }
+    }
+    return m_vctWidgets[index];
 }

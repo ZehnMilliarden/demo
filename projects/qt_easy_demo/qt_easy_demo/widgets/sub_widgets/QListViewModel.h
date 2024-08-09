@@ -29,12 +29,15 @@ public:
         void SetBtnText(const QString& text) { m_btnText = text; }
         QString GetToolTipText() const  { return m_toolTipText; }
         void SetToolTipText(const QString& text) { m_toolTipText = text; }
+        QVariant GetVarData() const { return m_varData; }
+        void SetVarData(const QVariant& data) { m_varData = data; }
 
     private:
         QString m_iconPath;
         QString m_titleText;
         QString m_btnText;
         QString m_toolTipText;
+        QVariant m_varData;
     };
 
 public:

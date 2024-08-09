@@ -40,7 +40,7 @@ void QFakeTabBar::addTab(const QString& strTitle, int nOffset)
 
 void QFakeTabBar::addTabs(std::vector<QString>& vctTitle)
 {
-    addTabs(vctTitle);
+    addTabs(vctTitle, -1);
 }
 
 void QFakeTabBar::addTabs(std::vector<QString>& vctTitle, int nOffset)
@@ -58,7 +58,7 @@ void QFakeTabBar::addTabs(std::vector<QString>& vctTitle, int nOffset)
     m_pModel->insertItems(nOffset, vctItems);
 }
 
-int QFakeTabBar::GetTabCount()
+int QFakeTabBar::GetTabCount() const
 {
     return m_pModel->GetItemCount();
 }
@@ -76,7 +76,52 @@ bool QFakeTabBar::SetCurrentIndex(int index)
         QModelIndex modelIndex = m_pModel->index(index);
         m_pListView->setCurrentIndex(modelIndex);
         m_pListView->scrollTo(modelIndex, QAbstractItemView::EnsureVisible);
+        return true;
     }
+
+    return false;
+}
+
+int QFakeTabBar::GetCurrentIndex() const {
+    return m_pListView->currentIndex().row();
+}
+
+QRect QFakeTabBar::tabRect(int index) const {
+    return m_pListView->visualRect(m_pListView->model()->index(index, 0));
+}
+
+int QFakeTabBar::count() const {
+    return GetTabCount();
+}
+
+QVariant QFakeTabBar::tabData(int index) const {
+    return m_pModel->data(m_pModel->index(index), Qt::UserRole + 5);
+}
+
+void QFakeTabBar::setTabData(int index, QVariant qVar) {
+    m_pModel->setData(m_pModel->index(index), qVar, Qt::UserRole + 5);
+}
+
+int QFakeTabBar::tabAt(const QPoint& point) const {
+    if (m_pListView)
+    {
+        QModelIndex modelIndex = m_pListView->indexAt(point);
+        if (modelIndex.isValid())
+        {
+            return modelIndex.row();
+        }
+    }
+    return -1;
+}
+
+void QFakeTabBar::removeTab(int index) {
+    if (m_pModel) {
+        m_pModel->removeItem(index);
+    }
+}
+
+QSize QFakeTabBar::tabSizeHint(int index) const {
+    return QSize(100, 50);
 }
 
 void QFakeTabBar::SetBtnCloseTipText(const QString& strText)
@@ -164,7 +209,7 @@ void QFakeTabBar::onHoverLeaveItemSlot(const QModelIndex& index)
 
 void QFakeTabBar::RegisterMetaType()
 {
-    qRegisterMetaType<QLimitePrivateSignal>("QLimitePrivateSignal");
+    qRegisterMetaType<QLimitePrivateSignal>("QFakeTabBar::QLimitePrivateSignal");
 }
 
 void QFakeTabBar::CreateUI()
@@ -195,6 +240,9 @@ void QFakeTabBar::CreateUI()
     m_pDelegate = new QListViewItemDelegate(this);
     m_pListView->setItemDelegate(m_pDelegate);
     m_pListView->viewport()->installEventFilter(m_pDelegate);
+    m_pDelegate->SetSizeHintFunc([this](const QStyleOptionViewItem& option, const QModelIndex& index)->QSize {
+        return tabSizeHint(index.row());
+        });
 
     m_pModel = new QListViewModel(this);
     m_pListView->setModel(m_pModel);
