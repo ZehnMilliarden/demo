@@ -27,12 +27,18 @@ private Q_SLOTS:
     void currentChangedSlot(const QModelIndex& current, const QModelIndex& previous);
     void tabCloseRequestedSlot(const QModelIndex& index);
     void tabMovedSlot(const QModelIndex& from, const QModelIndex& to);
+    void onToolTipTimerSlot();
+    void onHoverEnterSlot();
+    void onHoverLeaveSlot();
+    void onHoverEnterItemSlot(const QModelIndex& index);
+    void onHoverLeaveItemSlot(const QModelIndex& index);
 
 protected:
     void RegisterMetaType();
     void CreateUI();
     void CreateData();
     void CreateConnect();
+
 
 public:
     void addTab(const QString& strTitle);
@@ -41,6 +47,8 @@ public:
     void addTabs(std::vector<QString>& vctTitle, int nOffset);
     int  GetTabCount();
     bool SetCurrentIndex(int index);
+    void SetBtnCloseTipText(const QString& strText);
+    void SetTabToolTipText(int nIndex, const QString& strText);
 
 private:
     QListView* m_pListView = nullptr;
@@ -49,4 +57,10 @@ private:
 
     QListViewItemDelegate* m_pDelegate = nullptr;
     QListViewModel* m_pModel = nullptr;
+    QTimer* m_pToolTipTimer = nullptr;
+
+    QModelIndex m_preHoverIndex;
+    bool m_bPreEventOnBtn = false;
+
+    QString m_strBtnCloseTipText;
 };

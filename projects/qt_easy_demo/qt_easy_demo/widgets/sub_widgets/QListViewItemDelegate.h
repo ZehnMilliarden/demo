@@ -34,6 +34,10 @@ Q_SIGNALS:
     void onLineClicked(const QModelIndex& index, QLimitePrivateSiganl);
     void onItemSelected(const QModelIndex& index, QListView* pListView, QLimitePrivateSiganl);
     void onMoveItemTo(const QModelIndex& from, const QModelIndex& to, QLimitePrivateSiganl);
+    void onHoverEnterSignal(QLimitePrivateSiganl);
+    void onHoverLeaveSignal(QLimitePrivateSiganl);
+    void onHoverEnterItemSignal(const QModelIndex& index, QLimitePrivateSiganl);
+    void onHoverLeaveItemSignal(const QModelIndex& index, QLimitePrivateSiganl);
     
 public Q_SLOTS:
     void onItemInsertedSlot(const QModelIndex& parent, int first, int last);
@@ -54,30 +58,32 @@ private:
 
 private:
     void SetDragRow(int nRow);
-    int GetDragRow() const;
     void SetSelectRow(int nRow);
-    int GetSelectRow() const;
     void SetHighLiteRow(int nRow);
-    int GetHighLiteRow() const;
-    int GetOldHighLiteRow() const;
     void SetDraging(bool bVal);
-    bool IsDraging() const;
-    QSize GetItemSize() const;
     void SetItemSize(const QSize& size);
     void UpdateItemSize(const int nNewItemCount);
-    QString GetMimeDataType() const;
     void SetHoverIndex(const QModelIndex& index);
-    QModelIndex GetHoverIndex() const;
-    bool IsHoverIndex(const QModelIndex& index) const;
     void SetPressIndex(const QModelIndex& index);
-    QModelIndex GetPressIndex() const;
-    bool IsPressIndex(const QModelIndex& index) const;
     void SetEventOnBtn(const bool bVal);
-    bool IsEventOnBtn() const;
-    bool IsDragStartNull() const;
     void SetClickedIndex(const QModelIndex& index);
+
+public:
     QModelIndex GetClickedIndex() const;
     bool IsClickedIndex(const QModelIndex& index) const;
+    bool IsEventOnBtn() const;
+    bool IsDragStartNull() const;
+    QModelIndex GetPressIndex() const;
+    bool IsPressIndex(const QModelIndex& index) const;
+    QModelIndex GetHoverIndex() const;
+    bool IsHoverIndex(const QModelIndex& index) const;
+    QString GetMimeDataType() const;
+    bool IsDraging() const;
+    QSize GetItemSize() const;
+    int GetDragRow() const;
+    int GetHighLiteRow() const;
+    int GetOldHighLiteRow() const;
+    int GetSelectRow() const;
 
 private:
     QModelIndex m_hoveredIndex;

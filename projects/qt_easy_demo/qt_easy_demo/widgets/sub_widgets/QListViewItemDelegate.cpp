@@ -132,10 +132,12 @@ bool QListViewItemDelegate::eventFilter(QObject* pObject, QEvent* pEvent)
             QListView* pListView = qobject_cast<QListView*>(pObject->parent());
             if (pListView) {
                 QModelIndex index = pListView->indexAt(hoverEvent->pos());
+                emit onHoverEnterItemSignal(index, QLimitePrivateSiganl());
                 SetHoverIndex(index);
                 pListView->viewport()->update();
             }
         }
+        emit onHoverEnterSignal(QLimitePrivateSiganl());
     }
     else if (pEvent->type() == QEvent::HoverLeave) {
         QHoverEvent* hoverEvent = dynamic_cast<QHoverEvent*>(pEvent);
@@ -143,10 +145,12 @@ bool QListViewItemDelegate::eventFilter(QObject* pObject, QEvent* pEvent)
             QListView* pListView = qobject_cast<QListView*>(pObject->parent());
             if (pListView) {
                 QModelIndex index = pListView->indexAt(hoverEvent->pos());
+                emit onHoverLeaveItemSignal(index, QLimitePrivateSiganl());
                 pListView->viewport()->update();
             }
             SetHoverIndex(QModelIndex());
         }
+        emit onHoverLeaveSignal(QLimitePrivateSiganl());
     }
     else if (pEvent->type() == QEvent::MouseMove)
     {
@@ -489,6 +493,8 @@ void QListViewItemDelegate::onHoverMove(QMouseEvent* pMouseEvent, QListView* pLi
     QModelIndex index = pListView->indexAt(pMouseEvent->pos());
     if (!IsHoverIndex(index))
     {
+        emit onHoverLeaveItemSignal(GetHoverIndex(), QLimitePrivateSiganl());
+        emit onHoverEnterItemSignal(index, QLimitePrivateSiganl());
         SetHoverIndex(index);
         pListView->viewport()->update();
     }

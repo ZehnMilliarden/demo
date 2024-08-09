@@ -81,6 +81,38 @@ int QListViewModel::GetItemCount() const
     return m_listData.size();
 }
 
+void QListViewModel::updateData(const QModelIndex& index, int role, const QVariant& data)
+{
+    if (!index.isValid() || index.row() < 0 || index.row() >= m_listData.size())
+    {
+        return;
+    }
+
+    auto it = m_listData.begin();
+    std::advance(it, index.row());
+    if (it != m_listData.end())
+    {
+        return;
+    }
+
+    switch (role) {
+    case Qt::UserRole + 1:
+        (*it)->SetIcon(data.toString());
+        break;
+    case Qt::UserRole + 2:
+        (*it)->SetTitleText(data.toString());
+        break;
+    case Qt::UserRole + 3:
+        (*it)->SetBtnText(data.toString());
+        break;
+    case Qt::UserRole + 4:
+        (*it)->SetToolTipText(data.toString());
+        break;
+    default:
+        break;
+    }
+}
+
 int QListViewModel::rowCount(const QModelIndex& parent) const
 {
     return GetItemCount();
@@ -95,15 +127,20 @@ QVariant QListViewModel::data(const QModelIndex& index, int role) const
 
     auto it = m_listData.begin();
     std::advance(it, index.row());
-    std::shared_ptr<QListItemData> listItem = *it;
+    if (it == m_listData.end())
+    {
+        return QVariant();
+    }
 
     switch (role) {
     case Qt::UserRole + 1:
-        return listItem->GetIcon();
+        return (*it)->GetIcon();
     case Qt::UserRole + 2:
-        return listItem->GetTitleText();
+        return (*it)->GetTitleText();
     case Qt::UserRole + 3:
-        return listItem->GetBtnText();
+        return (*it)->GetBtnText();
+    case Qt::UserRole + 4:
+        return (*it)->GetToolTipText();
     default:
         return QVariant();
     }
