@@ -1,0 +1,7 @@
+EasyCuda/*.user
+EasyCuda/*.sln
+EasyCuda/Debug
+EasyCuda/Release
+EasyCuda/x64/Debug
+EasyCuda/x64/Release
+EasyCuda/.vs
