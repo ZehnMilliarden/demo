@@ -121,7 +121,12 @@ void QListViewItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem&
 
 QSize QListViewItemDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    return GetItemSize();
+    if (m_funcSizeHint)
+    {
+        return m_funcSizeHint(option, index);
+    }
+
+    return QListViewItemDelegate::sizeHint(option, index);
 }
 
 bool QListViewItemDelegate::eventFilter(QObject* pObject, QEvent* pEvent)
@@ -132,10 +137,12 @@ bool QListViewItemDelegate::eventFilter(QObject* pObject, QEvent* pEvent)
             QListView* pListView = qobject_cast<QListView*>(pObject->parent());
             if (pListView) {
                 QModelIndex index = pListView->indexAt(hoverEvent->pos());
+                emit onHoverEnterItemSignal(index, QLimitePrivateSiganl());
                 SetHoverIndex(index);
                 pListView->viewport()->update();
             }
         }
+        emit onHoverEnterSignal(QLimitePrivateSiganl());
     }
     else if (pEvent->type() == QEvent::HoverLeave) {
         QHoverEvent* hoverEvent = dynamic_cast<QHoverEvent*>(pEvent);
@@ -143,10 +150,12 @@ bool QListViewItemDelegate::eventFilter(QObject* pObject, QEvent* pEvent)
             QListView* pListView = qobject_cast<QListView*>(pObject->parent());
             if (pListView) {
                 QModelIndex index = pListView->indexAt(hoverEvent->pos());
+                emit onHoverLeaveItemSignal(index, QLimitePrivateSiganl());
                 pListView->viewport()->update();
             }
             SetHoverIndex(QModelIndex());
         }
+        emit onHoverLeaveSignal(QLimitePrivateSiganl());
     }
     else if (pEvent->type() == QEvent::MouseMove)
     {
@@ -489,6 +498,8 @@ void QListViewItemDelegate::onHoverMove(QMouseEvent* pMouseEvent, QListView* pLi
     QModelIndex index = pListView->indexAt(pMouseEvent->pos());
     if (!IsHoverIndex(index))
     {
+        emit onHoverLeaveItemSignal(GetHoverIndex(), QLimitePrivateSiganl());
+        emit onHoverEnterItemSignal(index, QLimitePrivateSiganl());
         SetHoverIndex(index);
         pListView->viewport()->update();
     }
@@ -555,14 +566,16 @@ void QListViewItemDelegate::onDragMove(QDragMoveEvent* pDragMoveEvent, QListView
     
     if (pListView->flow() == QListView::LeftToRight)
     {
-        GetItemSize().width() / 2 - 1;
-        SetHighLiteRow(pListView->indexAt(pDragMoveEvent->pos() - QPoint(nOffset, 0)).row());
+        QRect itemRect = pListView->visualRect(pListView->indexAt(pDragMoveEvent->pos()));
+        nOffset = itemRect.width() / 2 - 1;
+        SetHighLiteRow(pListView->indexAt(pDragMoveEvent->pos()).row());
         nPoxy = pDragMoveEvent->pos().x();
     }
     else
     {
-        GetItemSize().height() / 2 - 1;
-        SetHighLiteRow(pListView->indexAt(pDragMoveEvent->pos() - QPoint(0, nOffset)).row());
+        QRect itemRect = pListView->visualRect(pListView->indexAt(pDragMoveEvent->pos()));
+        nOffset = itemRect.height() / 2 - 1;
+        SetHighLiteRow(pListView->indexAt(pDragMoveEvent->pos()).row());
         nPoxy = pDragMoveEvent->pos().y();
     }
 
@@ -649,12 +662,16 @@ void QListViewItemDelegate::onDropEvent(QDropEvent* pDropEvent, QListView* pList
     pListView->setCurrentIndex(insertIndex);
     emit onMoveItemTo(pressIndex, insertIndex, QLimitePrivateSiganl());
     emit onItemSelected(insertIndex, pListView, QLimitePrivateSiganl());
-    UpdateItemSize(pModel->GetItemCount());
 
     pListView->viewport()->update();
 
     pDropEvent->setDropAction(Qt::MoveAction);
     pDropEvent->accept();
+}
+
+void QListViewItemDelegate::SetSizeHintFunc(
+    const std::function<QSize(const QStyleOptionViewItem& option, const QModelIndex& index)>& func) {
+    m_funcSizeHint = func;
 }
 
 void QListViewItemDelegate::SetDragRow(int nRow)
@@ -703,33 +720,6 @@ bool QListViewItemDelegate::IsDraging() const
     return m_bIsDraging;
 }
 
-QSize QListViewItemDelegate::GetItemSize() const
-{
-    return m_sizeItem;
-}
-
-void QListViewItemDelegate::SetItemSize(const QSize& size)
-{
-    m_sizeItem = size;
-}
-
-void QListViewItemDelegate::UpdateItemSize(const int nNewItemCount)
-{
-    if (nNewItemCount > 20)
-    {
-        SetItemSize(QSize(120, 20));
-    }
-    else if (nNewItemCount < 8)
-    {
-        SetItemSize(QSize(140, 20));
-    }
-    else
-    {
-        int nWidth = 20 / (nNewItemCount - 8);
-        SetItemSize(QSize(nWidth + 60, 20));
-    }
-}
-
 QString QListViewItemDelegate::GetMimeDataType() const
 {
     return QStringLiteral("QListViewItemDelegate/drag-icon-title-btntext");
@@ -765,6 +755,10 @@ bool QListViewItemDelegate::IsPressIndex(const QModelIndex& index) const
 {
     bool bRet = m_pressedIndex.isValid() && m_pressedIndex == index;
     return bRet;
+}
+
+bool QListViewItemDelegate::IsHoverIndexInBtn(const QModelIndex& index) const {
+    return IsHoverIndex(index) && IsEventOnBtn();
 }
 
 void QListViewItemDelegate::SetEventOnBtn(const bool bVal)
@@ -823,5 +817,4 @@ void QListViewItemDelegate::onItemRemovedSlot(const QModelIndex& parent, int fir
 
 void QListViewItemDelegate::onItemCountChanged(int nNewItemCount)
 {
-    UpdateItemSize(nNewItemCount);
 }
