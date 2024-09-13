@@ -44,15 +44,19 @@ __host__ cudaError_t ReduceMain()
             break;
         }
 
-        int params[] = {0,1,2,3,4,5};
-        int paramSize = sizeof(params) / sizeof(int);
+        int params[1000] = {0};
+        int paramCount = sizeof(params) / sizeof(int);
+        for (int i = 0; i < paramCount; ++i)
+        {
+            params[i] = i;
+        }
         int outHostRet = 0, outDeviceRet = 0;
 
-        ReduceTestAtDevice(streamMain[0], deviceEvent[0], deviceEvent[1], params, paramSize, outDeviceRet);
-        ReduceTestAtHost(streamMain[1], hostEvents[0], hostEvents[1], params, paramSize, outHostRet);
+        ReduceTestAtDevice(streamMain[0], deviceEvent[0], deviceEvent[1], params, paramCount, outDeviceRet);
+        ReduceTestAtHost(streamMain[1], hostEvents[0], hostEvents[1], params, paramCount, outHostRet);
 
         ::cudaEventSynchronize(deviceEvent[1]);
-        ::cudaEventSynchronize(hostEvents[1]);
+        
 
         float elapsedDevice = 0, elapsedHost = 0;
         ::cudaEventElapsedTime(&elapsedDevice, deviceEvent[0], deviceEvent[1]);
@@ -71,7 +75,7 @@ __host__ cudaError_t ReduceMain()
     return cudaStatus;
 }
 
-__host__ cudaError_t ReduceTestAtHost(const cudaStream_t& stream, const cudaEvent_t& eventStart, const cudaEvent_t& eventStop, int* params, int paramSize, int& outRet)
+__host__ cudaError_t ReduceTestAtHost(const cudaStream_t& stream, const cudaEvent_t& eventStart, const cudaEvent_t& eventStop, int* params, int paramCount, int& outRet)
 {
     cudaError_t cudaStatus = cudaError_t::cudaSuccess;
 
@@ -80,7 +84,7 @@ __host__ cudaError_t ReduceTestAtHost(const cudaStream_t& stream, const cudaEven
 
         HostCallbackData cbdata;
         cbdata.params = params;
-        cbdata.paramsize = paramSize;
+        cbdata.paramsize = paramCount;
         cbdata.ret = &outRet;
 
         cudaStatus = ::cudaEventRecord(eventStart, stream);
@@ -101,12 +105,14 @@ __host__ cudaError_t ReduceTestAtHost(const cudaStream_t& stream, const cudaEven
             break;
         }
 
+        cudaStatus = ::cudaEventSynchronize(eventStop);
+
     } while (false);
 
     return cudaStatus;
 }
 
-__host__ cudaError_t ReduceTestAtDevice(const cudaStream_t& stream, const cudaEvent_t& eventStart, const cudaEvent_t& eventStop, int* params, int paramSize, int& outRet)
+__host__ cudaError_t ReduceTestAtDevice(const cudaStream_t& stream, const cudaEvent_t& eventStart, const cudaEvent_t& eventStop, int* params, int paramCount, int& outRet)
 {
     cudaError_t cudaStatus = cudaError_t::cudaSuccess;
     int* deviceParam = nullptr;
@@ -114,13 +120,17 @@ __host__ cudaError_t ReduceTestAtDevice(const cudaStream_t& stream, const cudaEv
 
     do
     {
+        int paramSize = sizeof(int) * paramCount;
         cudaStatus = ::cudaMallocAsync(&deviceParam, paramSize,stream);
         if (cudaStatus != cudaError_t::cudaSuccess)
         {
             break;
         }
 
-        cudaStatus = ::cudaMallocAsync(&deviceOutput, sizeof(int), stream);
+        const int nThreadCountOfBlock = 32;
+        const int nBlockCount = (paramCount + nThreadCountOfBlock - 1) / nThreadCountOfBlock;
+
+        cudaStatus = ::cudaMallocAsync(&deviceOutput, sizeof(int) * nBlockCount, stream);
         if (cudaStatus != cudaError_t::cudaSuccess)
         {
             break;
@@ -133,8 +143,9 @@ __host__ cudaError_t ReduceTestAtDevice(const cudaStream_t& stream, const cudaEv
         }
 
         cudaStatus = ::cudaEventRecord(eventStart, stream);
-
-        ReduceDemoKernel<<<1, paramSize, 0, stream>>>(deviceParam, paramSize, deviceOutput);
+        
+        ReduceDemoKernel<<<nBlockCount, nThreadCountOfBlock, 0, stream>>>(deviceParam, paramCount, deviceOutput);
+        ReduceDemoKernel<<<1, nBlockCount, 0, stream >>>(deviceOutput, nBlockCount, deviceOutput);
 
         cudaStatus = ::cudaEventRecord(eventStop, stream);
 
@@ -149,13 +160,48 @@ __host__ cudaError_t ReduceTestAtDevice(const cudaStream_t& stream, const cudaEv
     return cudaStatus;
 }
 
-__global__ void ReduceDemoKernel(int* params, int paramSize, int* outputRet)
+__global__ void ReduceDemoKernel(int* params, int paramCount, int* outputRet)
 {
-    printf("ReduceDemoKernel >> Current thread ID: %d\n", threadIdx.x);
+    int* realParams = params + blockIdx.x * blockDim.x;
+
+    if ((blockIdx.x * blockDim.x + threadIdx.x) >= paramCount)
+    {
+        return;
+    }
+
+    for (int offset = blockDim.x >> 1; offset > 0; offset >>= 1)
+    {
+        if (threadIdx.x < offset)
+        {
+            realParams[threadIdx.x] += realParams[threadIdx.x + offset];
+        }
+        
+        ::__syncthreads();
+    }
+
+    if (outputRet)
+    {
+        outputRet[blockIdx.x] = realParams[0];
+    }
 }
 
 void CUDART_CB ReduceHostCallback(cudaStream_t stream, cudaError_t cudaStatus, void* pData)
 {
     HostCallbackData* pCbData = (HostCallbackData*)pData;
-    printf("ReduceHostCallback >> Current thread ID: %d\n", ::GetCurrentThreadId());
+
+    if (!pCbData)
+    {
+        return;
+    }
+
+    int nSum = 0;
+    for (int i = 0; i < pCbData->paramsize; ++i)
+    {
+        nSum += pCbData->params[i];
+    }
+
+    if (pCbData->ret)
+    {
+        *(pCbData->ret) = nSum;
+    }
 }
