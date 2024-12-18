@@ -2,6 +2,7 @@
 // Microsoft Visual C++ generated include file.
 // Used by ComDll.rc
 #define IDS_PROJNAME        100
+#define IDR_CLSCOMDEMO      101
 
 // Next default values for new objects
 // 

@@ -6,22 +6,19 @@
 
 #include "resource.h"
 
-#include "interface/InfComDemo.h"
 #include "ClsComInnerDef.h"
+#include "ClsComDemoImpl.h"
 
 class ATL_NO_VTABLE ClsComDemo
-    : public InfComDemoEx
-    , public CComObjectRootEx<CComMultiThreadModel>
-    , public CComCoClass<ClsComDemo, &CLSID_ClsComDemo>
+    : public ClsComDemoImpl
+    , public CComCoClass<ClsComDemoImpl, &CLSID_ClsComDemo>
 {
 public:
     using ThisClass  = ClsComDemo;
-    using ThisCoClass = CComObject<ThisClass>;
-    using ThisCoAggClass = CComAggObject<ThisClass>;
 
 public:
-    ClsComDemo();
-    ~ClsComDemo();
+    ClsComDemo() = default;
+    ~ClsComDemo() = default;
 
     // 如果想以单例模式可以使用宏
     // DECLARE_CLASSFACTORY_SINGLETON(ThisClass);
@@ -29,10 +26,12 @@ public:
 
     // 如果不需要注册表的资源描述信息可以使用以下宏
     // 因为 UpdateRegistry 方法 是宏 OBJECT_ENTRY_AUTO 中必须的
-    DECLARE_NO_REGISTRY()
-    // 否则应该使用宏
-    // DECLARE_REGISTRY()
-    // DECLARE_REGISTRY_XXX() 
+    // DECLARE_NO_REGISTRY()
+    // 否则应该使用宏DECLARE_REGISTRY()系统注册表中输入或删除主对象的条目(这个方法已不被支持了)
+    // DECLARE_REGISTRY(ClsComDemo, _T("Demo.ClsComDemo.1"), _T("Demo.ClsComDemo"), (UINT)0, THREADFLAGS_APARTMENT)
+    // 或者使用下面这两个宏使用 .rgs 脚本文件完成注册
+    // DECLARE_REGISTRY_RESOURCE(_T("XXX.rgs")) 或者 DECLARE_REGISTRY_RESOURCEID(IDR_XXX)
+    DECLARE_REGISTRY_RESOURCEID(IDR_CLSCOMDEMO)
 
     // 要求组件不可被聚合
     // DECLARE_NOT_AGGREGATABLE(ThisClass)
@@ -51,17 +50,8 @@ public:
     // 一般用于保护内部聚合组件引用计数
     // DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-    BEGIN_COM_MAP(ThisClass)
-        COM_INTERFACE_ENTRY(InfComDemo)
-        COM_INTERFACE_ENTRY(InfComDemoEx)
-    END_COM_MAP()
+    // 补充创建实例方法
     DECLARE_COM_MY_INSTANCE_CREATER(ThisClass)
-
-public: //InfComDemo
-    virtual HRESULT STDMETHODCALLTYPE Method1() override;
-    virtual HRESULT STDMETHODCALLTYPE Method2() override;
-    virtual HRESULT STDMETHODCALLTYPE Method3() override;
-    virtual HRESULT STDMETHODCALLTYPE Method4() override;
 };
 
 // DllGetClassObject -> CComModule::GetClassObject ->

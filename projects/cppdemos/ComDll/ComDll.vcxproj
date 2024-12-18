@@ -162,6 +162,7 @@
   <ItemGroup>
     <ClInclude Include="cls\ClsComAggDemo.h" />
     <ClInclude Include="cls\ClsComDemo.h" />
+    <ClInclude Include="cls\ClsComDemoImpl.h" />
     <ClInclude Include="cls\ClsComInnerDef.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="interface\InfComDemo.h" />
@@ -170,7 +171,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cls\ClsComAggDemo.cpp" />
-    <ClCompile Include="cls\ClsComDemo.cpp" />
+    <ClCompile Include="cls\ClsComDemoImpl.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -183,6 +184,13 @@
     <ResourceCompile Include="ComDll.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClsComDemo.rgs" />
+    <Midl Include="ClsComDemo.idl">
+      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">ClsComDemo.tlb</TypeLibraryName>
+      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ClsComDemo.tlb</TypeLibraryName>
+      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ClsComDemo.tlb</TypeLibraryName>
+      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">ClsComDemo.tlb</TypeLibraryName>
+    </Midl>
     <None Include="Source.def" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

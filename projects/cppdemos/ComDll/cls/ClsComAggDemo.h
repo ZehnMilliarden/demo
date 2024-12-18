@@ -17,8 +17,6 @@ class ATL_NO_VTABLE ClsComAggDemo
 
 public:
     using ThisClass  = ClsComAggDemo;
-    using ThisCoClass = CComObject<ThisClass>;
-    using ThisCoAggClass = CComAggObject<ThisClass>;
 
 public:
     ClsComAggDemo();
@@ -64,7 +62,7 @@ public:
     void FinalRelease();
 
 private:
-    CComPtr<ClsComDemo::ThisCoAggClass> m_pInnerComDemo = nullptr;
+    CComPtr<ClsComDemoImpl::ThisCoAggClass> m_pInnerComDemo = nullptr;
 };
 
 // DllGetClassObject -> CComModule::GetClassObject ->
