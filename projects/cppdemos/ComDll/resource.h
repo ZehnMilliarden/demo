@@ -3,6 +3,7 @@
 // Used by ComDll.rc
 #define IDS_PROJNAME        100
 #define IDR_CLSCOMDEMO      101
+#define IDR_CLSCOMAGGDEMO   102
 
 // Next default values for new objects
 // 

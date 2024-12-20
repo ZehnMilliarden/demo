@@ -1,22 +1,22 @@
 HKCR
 {
-    Demo.ClsComDemo.1 = s 'ClsComDemo'
+    Demo.ClsComAggDemo.1 = s 'ClsComAggDemo'
     {
-        CLSID = s '{2312b16a-7166-4838-8628-a914d96bef9a}'
+        CLSID = s '{0bc65693-f9d3-450d-8794-732e964cadf8}'
     }
-    Demo.ClsComDemo = s 'ClsComDemo'
+    Demo.ClsComAggDemo = s 'ClsComAggDemo'
     {
-        CLSID = s '{2312b16a-7166-4838-8628-a914d96bef9a}'
-        CurVer = s 'Demo.ClsComDemo.1'
+        CLSID = s '{0bc65693-f9d3-450d-8794-732e964cadf8}'
+        CurVer = s 'Demo.ClsComAggDemo.1'
     }
 
     NoRemove CLSID
     {
-        ForceRemove {2312b16a-7166-4838-8628-a914d96bef9a} = s 'ClsComDemo Class'
+        ForceRemove {0bc65693-f9d3-450d-8794-732e964cadf8} = s 'ClsComAggDemo Class'
         {
             val AppID = s '%APPID%'
-            ProgID = s 'Demo.ClsComDemo.1'
-            VersionIndependentProgID = s 'Demo.ClsComDemo'
+            ProgID = s 'Demo.ClsComAggDemo.1'
+            VersionIndependentProgID = s 'Demo.ClsComAggDemo'
             InprocServer32 = s '%MODULE%'
             {
                 val ThreadingModel = s 'Both'
@@ -28,7 +28,6 @@ HKCR
     {
         ForceRemove %APPID% = s 'ClsComDemoApplication'
         {
-            val AppID = s '%APPID%'
             val DllSurrogate = s ''
         }
     }

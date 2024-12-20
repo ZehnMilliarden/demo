@@ -72,6 +72,9 @@
     <None Include="ClsComDemo.rgs">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="ClsComAggDemo.rgs">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Midl Include="ClsComDemo.idl">

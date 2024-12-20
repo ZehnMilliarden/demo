@@ -13,19 +13,8 @@ class ClsComDemoImpl
     , public CComObjectRootEx<CComMultiThreadModel>
 {
 public:
-    using ThisClass = ClsComDemoImpl;
-    using ThisCoClass = CComObject<ThisClass>;
-    using ThisCoAggClass = CComAggObject<ThisClass>;
-
-public:
     ClsComDemoImpl();
     ~ClsComDemoImpl();
-
-    BEGIN_COM_MAP(ClsComDemoImpl)
-        COM_INTERFACE_ENTRY(InfComDemo)
-        COM_INTERFACE_ENTRY(InfComDemoEx)
-    END_COM_MAP()
-    DECLARE_COM_MY_INSTANCE_CREATER(ThisClass)
 
 public: //InfComDemo
     virtual HRESULT STDMETHODCALLTYPE Method1() override;

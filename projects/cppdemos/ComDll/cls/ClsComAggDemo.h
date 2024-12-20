@@ -28,10 +28,11 @@ public:
 
     // 如果不需要注册表的资源描述信息可以使用以下宏
     // 因为 UpdateRegistry 方法 是宏 OBJECT_ENTRY_AUTO 中必须的
-    DECLARE_NO_REGISTRY()
+    // DECLARE_NO_REGISTRY()
     // 否则应该使用宏
     // DECLARE_REGISTRY()
     // DECLARE_REGISTRY_XXX() 
+    DECLARE_REGISTRY_RESOURCEID(IDR_CLSCOMAGGDEMO)
 
     // 要求组件不可被聚合
     DECLARE_NOT_AGGREGATABLE(ThisClass)
@@ -62,7 +63,7 @@ public:
     void FinalRelease();
 
 private:
-    CComPtr<ClsComDemoImpl::ThisCoAggClass> m_pInnerComDemo = nullptr;
+    CComPtr<ClsComDemo::ThisCoAggClass> m_pInnerComDemo = nullptr;
 };
 
 // DllGetClassObject -> CComModule::GetClassObject ->

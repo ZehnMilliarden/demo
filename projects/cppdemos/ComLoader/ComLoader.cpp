@@ -12,7 +12,7 @@
 
 int main()
 {
-    if (false)
+    if (true)
     {
         std::shared_ptr<EasyComLoader<InfComDemo, CLSID_ClsComDemo>> loader =
             std::make_shared<EasyComLoader<InfComDemo, CLSID_ClsComDemo>>();
@@ -49,7 +49,7 @@ int main()
         pInfComDemo3->Method4();
     }
 
-    if (true)
+    if (false)
     {
         // ≤Ω÷Ë 1: ≥ı ºªØ COM ø‚
         HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);

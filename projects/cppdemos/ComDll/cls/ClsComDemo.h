@@ -15,6 +15,8 @@ class ATL_NO_VTABLE ClsComDemo
 {
 public:
     using ThisClass  = ClsComDemo;
+    using ThisCoClass = CComObject<ThisClass>;
+    using ThisCoAggClass = CComAggObject<ThisClass>;
 
 public:
     ClsComDemo() = default;
@@ -52,6 +54,11 @@ public:
 
     // 补充创建实例方法
     DECLARE_COM_MY_INSTANCE_CREATER(ThisClass)
+
+    BEGIN_COM_MAP(ClsComDemo)
+        COM_INTERFACE_ENTRY(InfComDemo)
+        COM_INTERFACE_ENTRY(InfComDemoEx)
+    END_COM_MAP()
 };
 
 // DllGetClassObject -> CComModule::GetClassObject ->

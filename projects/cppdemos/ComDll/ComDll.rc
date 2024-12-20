@@ -48,6 +48,7 @@ END
 /////////////////////////////////////////////////////////////////////////////
 
 IDR_CLSCOMDEMO  REGISTRY  "ClsComDemo.rgs"
+IDR_CLSCOMAGGDEMO  REGISTRY  "ClsComAggDemo.rgs"
 
 STRINGTABLE
 BEGIN
