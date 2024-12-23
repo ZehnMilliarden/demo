@@ -99,6 +99,7 @@ int main()
         OLECHAR* szMember = (wchar_t*)L"Method4";
         DISPID dispid;
         pObj->GetIDsOfNames(IID_NULL, &szMember, 1, LOCALE_USER_DEFAULT, &dispid);
+        // 注意这里的第一个参数时 当有有个接口继承 IDispatch 时，有方法重名时，请指定接口ID
 
         VARIANTARG varg[1];
         VariantInit(&varg[0]);
