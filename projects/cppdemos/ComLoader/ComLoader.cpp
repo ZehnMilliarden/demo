@@ -29,7 +29,6 @@ int main()
         pInfComDemo1->Method1();
         pInfComDemo2->Method2();
         pInfComDemo3->Method3();
-        pInfComDemo3->Method4();
     }
 
     if (false)
@@ -46,7 +45,6 @@ int main()
         pInfComDemo3->Method1();
         pInfComDemo3->Method2();
         pInfComDemo3->Method3();
-        pInfComDemo3->Method4();
     }
 
     if (false)
@@ -76,7 +74,18 @@ int main()
 
         // 步骤 3: 使用 COM 对象
         // 例如，如果您的接口有一个名为 DoSomething 的方法：
-        hr = pObj->Method4();
+
+
+        pObj->Method2();
+
+        VARIANT var;
+        VariantInit(&var);
+        BSTR bStr = SysAllocString(L"From Remote");
+        var.vt = VT_BSTR;
+        var.bstrVal = bStr;
+        hr = pObj->Method4(var);
+        SysFreeString(bStr);
+        VariantClear(&var);
         if (SUCCEEDED(hr))
         {
             std::cout << "Successfully called DoSomething()" << std::endl;
@@ -86,6 +95,43 @@ int main()
             std::cout << "Failed to call DoSomething(). Error code = 0x"
                 << std::hex << hr << std::endl;
         }
+
+        OLECHAR* szMember = (wchar_t*)L"Method4";
+        DISPID dispid;
+        pObj->GetIDsOfNames(IID_NULL, &szMember, 1, LOCALE_USER_DEFAULT, &dispid);
+
+        VARIANTARG varg[1];
+        VariantInit(&varg[0]);
+        BSTR bStrParam = SysAllocString(L"From Remote");
+        if (!bStrParam) {
+            std::cout << "SysAllocString failed." << std::endl;
+            CoUninitialize();
+            return 1;
+        }
+        varg[0].vt = VT_BSTR;
+        varg[0].bstrVal = bStrParam;
+
+        // 设置 DISPPARAMS 结构体
+        DISPPARAMS dispparams;
+        dispparams.cArgs = 1;
+        dispparams.rgvarg = varg;
+        dispparams.cNamedArgs = 0;
+        dispparams.rgdispidNamedArgs = nullptr;
+
+        // 调用 Method4
+        VARIANT result;
+        VariantInit(&result);
+        hr = pObj->Invoke(dispid, IID_NULL, LOCALE_USER_DEFAULT, DISPATCH_METHOD, &dispparams, &result, nullptr, nullptr);
+        if (FAILED(hr)) {
+            std::cout << "Invoke failed. Error code = 0x" << std::hex << hr << std::endl;
+            SysFreeString(bStrParam);
+            CoUninitialize();
+            return 1;
+        }
+
+        // 清理
+        SysFreeString(bStrParam);
+        VariantClear(&result);
 
         // 步骤 4: 释放 COM 对象
         // 使用 CComPtr，对象会自动释放

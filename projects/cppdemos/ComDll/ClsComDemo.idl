@@ -4,9 +4,10 @@ import "ocidl.idl";
 [
 	object,
 	uuid(eabd8132-1ac2-4cf2-99aa-e94d1189ea2b),
-	dual
+	dual,
+	oleautomation
 ]
-interface InfComDemo : IUnknown
+interface InfComDemo : IDispatch
 {
 	[id(1)] HRESULT Method1();
 	[id(2)] HRESULT Method2();
@@ -15,12 +16,13 @@ interface InfComDemo : IUnknown
 [
 	object,
 	uuid(13fb16b2-25ff-4c83-a7fa-375107e00267),
-	dual
+	dual,
+	oleautomation
 ]
 interface InfComDemoEx : InfComDemo
 {
 	[id(3)] HRESULT Method3();
-	[id(4)] HRESULT Method4();
+	[id(4)] HRESULT Method4([in] VARIANT szText);
 };
 
 [

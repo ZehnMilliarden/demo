@@ -56,6 +56,7 @@ public:
     DECLARE_COM_MY_INSTANCE_CREATER(ThisClass)
 
     BEGIN_COM_MAP(ClsComDemo)
+        COM_INTERFACE_ENTRY(IDispatch)
         COM_INTERFACE_ENTRY(InfComDemo)
         COM_INTERFACE_ENTRY(InfComDemoEx)
     END_COM_MAP()

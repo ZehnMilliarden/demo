@@ -53,6 +53,7 @@ public:
 
     BEGIN_COM_MAP(ThisClass)
         COM_INTERFACE_ENTRY(IUnknown)
+        COM_INTERFACE_ENTRY_AGGREGATE(__uuidof(IDispatch), m_pInnerComDemo)
         COM_INTERFACE_ENTRY_AGGREGATE(__uuidof(InfComDemo), m_pInnerComDemo)
         COM_INTERFACE_ENTRY_AGGREGATE(__uuidof(InfComDemoEx), m_pInnerComDemo)
     END_COM_MAP()

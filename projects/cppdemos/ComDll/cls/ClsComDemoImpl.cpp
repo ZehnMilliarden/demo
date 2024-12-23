@@ -35,10 +35,10 @@ HRESULT STDMETHODCALLTYPE ClsComDemoImpl::Method3()
     return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE ClsComDemoImpl::Method4()
+HRESULT STDMETHODCALLTYPE ClsComDemoImpl::Method4(VARIANT szText)
 {
     std::wstringstream ss;
-    ss << this << L" Method4\r\n";
+    ss << this << szText.bstrVal << L"\r\n";
     DumpInfo(ss);
     return S_OK;
 }
