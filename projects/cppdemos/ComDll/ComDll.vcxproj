@@ -170,7 +170,6 @@
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="cls\ClsComAggDemo.cpp" />
     <ClCompile Include="cls\ClsComDemoImpl.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="pch.cpp">

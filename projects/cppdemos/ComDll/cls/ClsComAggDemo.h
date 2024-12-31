@@ -19,8 +19,8 @@ public:
     using ThisClass  = ClsComAggDemo;
 
 public:
-    ClsComAggDemo();
-    ~ClsComAggDemo();
+    ClsComAggDemo() = default;
+    ~ClsComAggDemo() = default;
 
     // 如果想以单例模式可以使用宏
     DECLARE_CLASSFACTORY_SINGLETON(ThisClass);
@@ -53,9 +53,8 @@ public:
 
     BEGIN_COM_MAP(ThisClass)
         COM_INTERFACE_ENTRY(IUnknown)
-        // 这里是聚合组件, 需要注意的是, 你应该将工程类聚合进去，而不是直接将对象接口聚合进去。
-        // 如果直接聚合接口对象, 那在创建聚合对象实例后, 会首先获取被聚合类的工程实例, 然再查询该工程实例支持的接口, 再通过工厂实例获取对应的接口对象。
-        // 如果直接聚合可能会出现死循环。
+        // 注意这里聚合时 应该聚合 IUnknown 接口类型对象，而不要直接聚合 特定其他接口对象。
+        // 这里需要配合  FinalConstruct 里的方法说明。
         COM_INTERFACE_ENTRY_AGGREGATE(__uuidof(IDispatch), m_pInnerComDemo)
         COM_INTERFACE_ENTRY_AGGREGATE(__uuidof(InfComDemo), m_pInnerComDemo)
         COM_INTERFACE_ENTRY_AGGREGATE(__uuidof(InfComDemoEx), m_pInnerComDemo)
@@ -64,8 +63,20 @@ public:
     // 这个方法是 用了创建完整的类的 对象，而不是面向接口的对象
     // DECLARE_COM_MY_INSTANCE_CREATER(ThisClass)
 
-    HRESULT FinalConstruct();
-    void FinalRelease();
+    HRESULT FinalConstruct()
+    {
+        // 在创建接口对象时，如果创建的是 IUnknown对象 ，那返回的指针是 CComAggObject<TargetClass> 的对象的指针
+        // 而 TargetClass 对象的实例，是 CComAggObject 的一个容器成员。通过这个对象查询特定接口对象，就是在TargetClass的对象映射表里查询。
+        // 而如果一开始创建的不是 IUnknown 指针类型对象，则返回的是 具体的 TargetClass 对象的指针，
+        // 用这个指针得到IUnknown类型对象，其实是聚合目标对象类型，也就是本类的IUnknown指针。
+        // 所以如果 不 是在CreateInstance 时就创建IUnknown类型指针进行聚合，后续在查找映射表时会歘先栈死循环递归异常
+        return ClsComDemo::CreateInstance(GetControllingUnknown(), &m_pInnerComDemo);
+    }
+
+    void FinalRelease()
+    {
+        m_pInnerComDemo = nullptr;
+    }
 
 private:
     CComPtr<IUnknown> m_pInnerComDemo = nullptr;
