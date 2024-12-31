@@ -13,7 +13,7 @@ ClsComAggDemo::~ClsComAggDemo()
 
 HRESULT ClsComAggDemo::FinalConstruct()
 {
-    return ClsComDemo::CreateMyInstance(GetControllingUnknown(), m_pInnerComDemo);
+    return ClsComDemo::CreateInstance(GetControllingUnknown(), &m_pInnerComDemo);
 }
 
 void ClsComAggDemo::FinalRelease()

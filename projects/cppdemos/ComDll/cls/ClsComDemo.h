@@ -11,7 +11,7 @@
 
 class ATL_NO_VTABLE ClsComDemo
     : public ClsComDemoImpl
-    , public CComCoClass<ClsComDemoImpl, &CLSID_ClsComDemo>
+    , public CComCoClass<ClsComDemo, &CLSID_ClsComDemo>
 {
 public:
     using ThisClass  = ClsComDemo;
@@ -35,6 +35,8 @@ public:
     // DECLARE_REGISTRY_RESOURCE(_T("XXX.rgs")) 或者 DECLARE_REGISTRY_RESOURCEID(IDR_XXX)
     DECLARE_REGISTRY_RESOURCEID(IDR_CLSCOMDEMO)
 
+    // 该宏定义了本类标准的创建实例方法
+    // 通过 _CreatorClass 创建实现对接口对象的创建
     // 要求组件不可被聚合
     // DECLARE_NOT_AGGREGATABLE(ThisClass)
     // 声明组件可以被聚合
@@ -52,7 +54,9 @@ public:
     // 一般用于保护内部聚合组件引用计数
     // DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-    // 补充创建实例方法
+    // 补充创建该类实例方法, 该方法会失去 DECLARE_AGGREGATABLE 等 宏定义的 特性
+    // 如果想保留该特性可以使用 ThisClass::CreateInstance 方法来创建面向接口的实例
+    // 如果 添加 DECLARE_NOT_AGGREGATABLE 的宏定义, ThisClass::CreateInstance(GetControllingUnknown(),Ptr); 就会报警说类不支持聚合
     DECLARE_COM_MY_INSTANCE_CREATER(ThisClass)
 
     BEGIN_COM_MAP(ClsComDemo)

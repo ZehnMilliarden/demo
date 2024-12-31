@@ -53,18 +53,22 @@ public:
 
     BEGIN_COM_MAP(ThisClass)
         COM_INTERFACE_ENTRY(IUnknown)
+        // 这里是聚合组件, 需要注意的是, 你应该将工程类聚合进去，而不是直接将对象接口聚合进去。
+        // 如果直接聚合接口对象, 那在创建聚合对象实例后, 会首先获取被聚合类的工程实例, 然再查询该工程实例支持的接口, 再通过工厂实例获取对应的接口对象。
+        // 如果直接聚合可能会出现死循环。
         COM_INTERFACE_ENTRY_AGGREGATE(__uuidof(IDispatch), m_pInnerComDemo)
         COM_INTERFACE_ENTRY_AGGREGATE(__uuidof(InfComDemo), m_pInnerComDemo)
         COM_INTERFACE_ENTRY_AGGREGATE(__uuidof(InfComDemoEx), m_pInnerComDemo)
     END_COM_MAP()
 
-    DECLARE_COM_MY_INSTANCE_CREATER(ThisClass)
+    // 这个方法是 用了创建完整的类的 对象，而不是面向接口的对象
+    // DECLARE_COM_MY_INSTANCE_CREATER(ThisClass)
 
     HRESULT FinalConstruct();
     void FinalRelease();
 
 private:
-    CComPtr<ClsComDemo::ThisCoAggClass> m_pInnerComDemo = nullptr;
+    CComPtr<IUnknown> m_pInnerComDemo = nullptr;
 };
 
 // DllGetClassObject -> CComModule::GetClassObject ->
