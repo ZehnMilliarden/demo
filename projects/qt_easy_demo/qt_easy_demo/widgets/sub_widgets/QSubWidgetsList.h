@@ -6,3 +6,4 @@
 #include "QRedDotWidgetLab.h"
 #include "QMakeDownEditLab.h"
 #include "QTabWidgetLab.h"
+#include "QOffscreenWidgetLab.h"

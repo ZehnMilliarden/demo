@@ -106,6 +106,8 @@
     <ClCompile Include="widgets\sub_widgets\QListWidgetLab.cpp" />
     <ClCompile Include="widgets\sub_widgets\QMakeDownEditLab.cpp" />
     <ClCompile Include="widgets\sub_widgets\QNormalWidgetLab.cpp" />
+    <ClCompile Include="widgets\sub_widgets\QOffscreenWidget.cpp" />
+    <ClCompile Include="widgets\sub_widgets\QOffscreenWidgetLab.cpp" />
     <ClCompile Include="widgets\sub_widgets\QTabWidgetLab.cpp">
       <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">input</DynamicSource>
       <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(Filename).moc</QtMocFileName>
@@ -140,6 +142,8 @@
     <QtMoc Include="widgets\sub_widgets\QDragThumbnail.h" />
     <QtMoc Include="widgets\sub_widgets\QFakeTabBar.h" />
     <QtMoc Include="widgets\sub_widgets\QFakeTabWidget.h" />
+    <ClInclude Include="widgets\sub_widgets\QOffscreenWidget.h" />
+    <QtMoc Include="widgets\sub_widgets\QOffscreenWidgetLab.h" />
     <ClInclude Include="widgets\sub_widgets\QSubWidgetsList.h" />
     <QtMoc Include="widgets\sub_widgets\QRedDotWidgetLab.h" />
     <QtMoc Include="widgets\sub_widgets\QListWidgetLab.h" />
